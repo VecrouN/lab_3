@@ -1,7 +1,8 @@
 #include "MainWindow.h"
 
 #include <QApplication>
-
+#include <crypto++/aes.h>
+#include <crypto++/rsa.h>
 
 int main(int argc, char *argv[])
 {
