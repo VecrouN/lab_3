@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 
 // ЗАМЕТКИ
 // QFileDialog для файлового менеджера
-// OpenSSL для работы с ключами
+// crypto++ для работы с ключами и шифрованием
 //
 
 // TODO
