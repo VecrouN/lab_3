@@ -9,11 +9,25 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    AesDecryptor.cpp \
+    AesEncryptor.cpp \
+    Cryptor.cpp \
+    Decryptor.cpp \
+    Encryptor.cpp \
+    RsaDecryptor.cpp \
+    RsaEncryptor.cpp \
     main.cpp \
     MainWindow.cpp
 
 HEADERS += \
-    MainWindow.h
+    AesDecryptor.h \
+    AesEncryptor.h \
+    Cryptor.h \
+    Decryptor.h \
+    Encryptor.h \
+    MainWindow.h \
+    RsaDecryptor.h \
+    RsaEncryptor.h
 
 FORMS += \
     MainWindow.ui
