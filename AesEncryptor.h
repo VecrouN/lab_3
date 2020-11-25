@@ -3,6 +3,8 @@
 
 #include "Encryptor.h"
 
+#include <crypto++/aes.h>
+
 class AesEncryptor : public Encryptor
 {
 	public:
