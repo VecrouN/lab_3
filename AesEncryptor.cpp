@@ -3,105 +3,117 @@
 
 AesEncryptor::AesEncryptor()
 {
-	memset( m_CipherAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
+	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
 	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
-
-	return;
 }
 
-void AesEncryptor::AesEncryptFile()
+
+void AesEncryptor::aesEncryptFile(const std::string& filePath)
 {
 
+	this->createNewPublicInitializationVector(this->m_PublicInitializationVector);
+
+	std::string textForEncryption = "";
+	this->readFileForEncryption(filePath, textForEncryption);
+
+
+	CryptoPP::AES::Encryption aesEncryption(m_PrivateAesKey, CryptoPP::AES::DEFAULT_KEYLENGTH); // шифр
+	CryptoPP::CBC_Mode_ExternalCipher::Encryption cbcEncryption( aesEncryption, m_PublicInitializationVector ); // режим работы cbc
+
+	std::string encryptedText= "";
+	CryptoPP::StreamTransformationFilter stfEncryptor(cbcEncryption, new CryptoPP::StringSink( encryptedText ) );
+	stfEncryptor.Put( reinterpret_cast<const unsigned char*>( textForEncryption.c_str() ), textForEncryption.length()); // reinterpret_cast преобразование указателя
+	stfEncryptor.MessageEnd();
+
+	// ************************ //
+   //   конец aesEncryptFile   //
+  // ************************ //
 }
-int main()
+
+
+void AesEncryptor::createNewPublicInitializationVector(byte (&changedPublicInitializationVector)[ CryptoPP::AES::BLOCKSIZE ])
 {
+	   // ********************************************** //
+	  //   Заполнение вектора инициализации случайными  //
+	 //   значениями, исключая служебные символы       //
+	// ********************************************** //
+	char tmpChar;
 	srand(static_cast<unsigned int>(time(0))); //  сид для случайного числа
-	// byte key[ CryptoPP::AES::DEFAULT_KEYLENGTH ], iv[ CryptoPP::AES::BLOCKSIZE ];
-	//memset( key, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
-	//memset( iv, 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
-
-	/*
-	*
-	* заполнение iv случайными значениями
-	*
-	*/
-
-	char tmp_char;
-	for(int i = 0; i < CryptoPP::AES::BLOCKSIZE-1; ++i)
-	{
-		tmp_char = rand()% 255 - 128;
-		iv[i] = 0xFF & static_cast<byte>(tmp_char);
-	}
-	std::cout << "iv =\n"<<iv<<std::endl;
-	std::cout << "hex iv =\n";
-
+	memset( changedPublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE );
 	for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
 	{
-		std::cout << "0x" << std::hex << (0xFF & static_cast<byte>(iv[i])) << " ";
+		do
+		{
+			tmpChar = rand()% 255 - 128;
+		}while( ( static_cast<int>(tmpChar) == 127 ) || ( ( static_cast<int>(tmpChar) >= 0 ) && ( static_cast<int>(tmpChar) <=  31 ) ) );
+		changedPublicInitializationVector[i] = 0xFF & static_cast<byte>(tmpChar);
 	}
-	std::cout<<std::endl;
-	/*
-	*
-	* объявление переменных
-	*
-	*/
 
-	std::string plaintext = "Тестовый Текст нА случай отсутивия входного файла";
+	  // ********************************************* //
+	 //   конец createNewPublicInitializationVector   //
+	// ********************************************* //
+}
+
+
+void AesEncryptor::readFileForEncryption(const std::string& filePath, std::string& textForEncryption)
+{
+	std::string tmpString = "";
+	std::ifstream fileToRead;
+	fileToRead.open(filePath);
+	if(fileToRead.is_open())
+	{
+		textForEncryption = "";
+		while (getline(fileToRead, tmpString))
+		{
+			textForEncryption.append(tmpString+"\n");
+		}
+	}
+	fileToRead.close();
+
+	  // ******************************* //
+	 //   конец readFileForEncryption   //
+	// ******************************* //
+}
+
+void AesEncryptor::writeFileForEncryption(const std::string& filePath, const std::string& encryptedText)
+{
+	std::ofstream outFile;
+
+	int i;
+	for(i = filePath.length(); i > 0 && filePath[i] != '/'; --i);
+	++i;
+	std::string path = filePath.substr(0, i-1), name = filePath.substr(i, filePath.length()-1);
+	name = "encrypted_" + name;
+	std::string outFilePath = path+name;
+
+	outFile.open(outFilePath);
+	if(outFile.is_open())
+	{
+		outFile<<this->m_PublicInitializationVector<<"\n";
+		outFile<<encryptedText;
+	}
+	outFile.close();
+
+
+	// ******************************* //
+   //   конец writeFileForEncryption  //
+  // ******************************* //
+}
+
+	/*
+	std::string textForEncryption = "Тестовый Текст нА случай отсутивия входного файла";
 	std::string tmpString;
 	std::ifstream readedFile;
 	std::string ciphertext; // переменная для зашифрованного текста
 	std::string decryptedtext; // переменная для расшифрованного текста
-
-
-
-	/*
-	 *
-	 * чтение файла
-	 *
-	 */
-	readedFile.open("test.txt");
-	if(readedFile.is_open())
-	{
-		plaintext = "";
-		while (getline(readedFile, tmpString))
-		{
-			plaintext.append(tmpString+"\n");
-		}
-	}
-	readedFile.close();
-
-
-
-
-	/*
-	 *
-	 * вывод текста для шифрования
-	 *
-	 */
-
-	std::cout << "Текст для шифрования = " << std::endl;
-	std::cout << plaintext<< std::endl;
-
-
-	/*
-	 *
-	 * шифрование текста
-	 *
-	 */
-
-	CryptoPP::AES::Encryption aesEncryption(key, CryptoPP::AES::DEFAULT_KEYLENGTH); // шифр
-	CryptoPP::CBC_Mode_ExternalCipher::Encryption cbcEncryption( aesEncryption, iv ); // режим работы cbc
-
-	CryptoPP::StreamTransformationFilter stfEncryptor(cbcEncryption, new CryptoPP::StringSink( ciphertext ) );
-	stfEncryptor.Put( reinterpret_cast<const unsigned char*>( plaintext.c_str() ), plaintext.length()); // reinterpret_cast преобразование указателя
-	stfEncryptor.MessageEnd();
+	*/
 
 
 	/*
 	 *
 	 * вывод шифрованного текста
 	 *
-	 */
+
 
 	std::cout << "Cipher Text (" << ciphertext.size() << " bytes)" << std::endl;
 	std::cout<<"Cipher Text = "<<ciphertext<<"\n";
@@ -113,29 +125,20 @@ int main()
 
 
 
-	/*
+
 	*
 	* сохранение в файл
 	*
 	*/
 
-	std::ofstream outFile;
-	outFile.open("out.txt");
-	if(outFile.is_open())
-	{
-		outFile<<iv<<"\n";
-		outFile<<ciphertext;
-	}
-	outFile.close();
 
-	std::cout << std::endl << std::endl;
 
 	//
 	// Decrypt
 	//
 
 
-
+	/*
 	readedFile.open("out.txt");
 	plaintext = "";
 	tmpString = "";
@@ -177,3 +180,4 @@ int main()
 
 	return 0;
 }
+	*/

@@ -20,10 +20,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+	private slots:
+	void on_pushButton_2_clicked();
+
 	private:
     Ui::MainWindow *ui;
-	AesDecryptor m_AesDecryptor;
-	AesEncryptor m_AesEncryptor;
+	// AesDecryptor m_AesDecryptor;
+	// AesEncryptor m_AesEncryptor;
 	//byte aesKey[ CryptoPP::AES::DEFAULT_KEYLENGTH ]; // ключ для (де)шифрования
 };
 #endif // MAINWINDOW_H
