@@ -7,6 +7,12 @@ AesEncryptor::AesEncryptor()
 	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
 }
 
+AesEncryptor::~AesEncryptor()
+{
+	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
+	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+}
+
 
 void AesEncryptor::aesEncryptFile(const std::string& filePath)
 {
@@ -82,7 +88,8 @@ void AesEncryptor::writeFileForEncryption(const std::string& filePath, const std
 	int i;
 	for(i = filePath.length(); i > 0 && filePath[i] != '/'; --i);
 	++i;
-	std::string path = filePath.substr(0, i-1), name = filePath.substr(i, filePath.length()-1);
+	std::string path = filePath.substr(0, i);
+	std::string name = filePath.substr(i, filePath.length()-1);
 	name = "encrypted_" + name;
 	std::string outFilePath = path+name;
 
@@ -99,85 +106,3 @@ void AesEncryptor::writeFileForEncryption(const std::string& filePath, const std
    //   конец writeFileForEncryption  //
   // ******************************* //
 }
-
-	/*
-	std::string textForEncryption = "Тестовый Текст нА случай отсутивия входного файла";
-	std::string tmpString;
-	std::ifstream readedFile;
-	std::string ciphertext; // переменная для зашифрованного текста
-	std::string decryptedtext; // переменная для расшифрованного текста
-	*/
-
-
-	/*
-	 *
-	 * вывод шифрованного текста
-	 *
-
-
-	std::cout << "Cipher Text (" << ciphertext.size() << " bytes)" << std::endl;
-	std::cout<<"Cipher Text = "<<ciphertext<<"\n";
-	std::cout<<"hex Cipher Text = "<<std::endl;
-	for( int i = 0; i < ciphertext.size(); ++i)
-	{
-		std::cout << "0x" << std::hex << (0xFF & static_cast<byte>(ciphertext[i])) << " ";
-	}
-
-
-
-
-	*
-	* сохранение в файл
-	*
-	*/
-
-
-
-	//
-	// Decrypt
-	//
-
-
-	/*
-	readedFile.open("out.txt");
-	plaintext = "";
-	tmpString = "";
-	memset( iv, 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
-
-	if(readedFile.is_open())
-	{
-		getline(readedFile, tmpString);
-		for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
-		{
-			iv[i] = tmpString[i];
-		}
-
-		while (getline(readedFile, tmpString))
-		{
-
-			plaintext.append(tmpString+"\n");
-		}
-	}
-	readedFile.close();
-
-
-	std::cout<<"прочтенный iv = \n"<<iv<<std::endl;
-	std::cout<<"\nпрочтенный шифрованный файл = \n"<<plaintext<<std::endl;
-
-
-	CryptoPP::AES::Decryption aesDecryption(key, CryptoPP::AES::DEFAULT_KEYLENGTH);
-	CryptoPP::CBC_Mode_ExternalCipher::Decryption cbcDecryption( aesDecryption, iv );
-
-	CryptoPP::StreamTransformationFilter stfDecryptor(cbcDecryption, new CryptoPP::StringSink( decryptedtext ) );
-	stfDecryptor.Put( reinterpret_cast<const unsigned char*>( ciphertext.c_str() ), ciphertext.size() );
-	stfDecryptor.MessageEnd();
-
-	//
-	// Dump Decrypted Text
-	//
-	std::cout << "Расшифрованный текст = \n";
-	std::cout << decryptedtext<< std::endl;
-
-	return 0;
-}
-	*/

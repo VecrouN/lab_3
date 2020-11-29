@@ -5,9 +5,6 @@
 
 #include <crypto++/aes.h>
 
-
-#include <crypto++/rsa.h>
-#include <crypto++/aes.h>
 #include <crypto++/modes.h>
 #include <iostream>
 #include <fstream>
@@ -18,6 +15,7 @@ class AesEncryptor : public Encryptor
 	 //    public     //
 	// ************* //
 	public: AesEncryptor();
+	public: ~AesEncryptor();
 	public: void aesEncryptFile(const std::string& filePath);
 	public: void createNewPublicInitializationVector(byte (&changedPublicInitializationVector)[ CryptoPP::AES::BLOCKSIZE ]);
 	public: void readFileForEncryption(const std::string& filePath, std::string& textForEncryption);
