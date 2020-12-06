@@ -15,11 +15,14 @@ class AesDecryptor : public Decryptor
 	 //    public     //
 	// ************* //
 	public: AesDecryptor();
+	public: AesDecryptor(AesDecryptor& _other);
+	public: AesDecryptor& operator=(const AesDecryptor& _other);
 	public: ~AesDecryptor();
 	public: void aesDecryptFile(const std::string& filePath);
 	public: void setPublicInitializationVector(byte (&changedPublicInitializationVector)[ CryptoPP::AES::BLOCKSIZE ]);
 	public: void readFileForDecryption(const std::string& filePath, std::string& textForDecryption);
 	public: void writeFileForDecryption(const std::string& filePath, const std::string& encryptedText);
+	public: void addDecryptToPath(std::string& filePath);
 
 	  // ************* //
 	 //   protected   //

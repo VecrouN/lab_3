@@ -6,7 +6,6 @@
 #include "AesDecryptor.h"
 #include "AesEncryptor.h"
 
-// #include <crypto++/aes.h> // для byte поля
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

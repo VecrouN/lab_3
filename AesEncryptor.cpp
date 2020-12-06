@@ -7,6 +7,46 @@ AesEncryptor::AesEncryptor()
 	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
 }
 
+AesEncryptor::AesEncryptor(AesEncryptor& _other)
+{
+	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
+	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+	memset( m_PrivateTmpArray , 0x00, CryptoPP::AES::BLOCKSIZE+ CryptoPP::AES::DEFAULT_KEYLENGTH); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+
+	for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
+	{
+		this->m_PrivateAesKey[i] = _other.m_PrivateAesKey[i];
+	}
+
+	for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
+	{
+		this->m_PublicInitializationVector[i] = _other.m_PublicInitializationVector[i];
+	}
+}
+
+AesEncryptor& AesEncryptor::operator=(const AesEncryptor& _other)
+{
+	if(this == &_other)
+	{
+		return *this;
+	}
+
+	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
+	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+
+	for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
+	{
+		this->m_PrivateAesKey[i] = _other.m_PrivateAesKey[i];
+	}
+
+	for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
+	{
+		this->m_PublicInitializationVector[i] = _other.m_PublicInitializationVector[i];
+	}
+
+	return *this;
+}
+
 AesEncryptor::~AesEncryptor()
 {
 	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
@@ -85,13 +125,8 @@ void AesEncryptor::writeFileForEncryption(const std::string& filePath, const std
 {
 	std::ofstream outFile;
 
-	int i;
-	for(i = filePath.length(); i > 0 && filePath[i] != '/'; --i);
-	++i;
-	std::string path = filePath.substr(0, i);
-	std::string name = filePath.substr(i, filePath.length()-1);
-	name = "encrypted_" + name;
-	std::string outFilePath = path+name;
+	std::string outFilePath = filePath;
+	addEncryptToPath(outFilePath);
 
 	outFile.open(outFilePath);
 	if(outFile.is_open())
@@ -104,5 +139,16 @@ void AesEncryptor::writeFileForEncryption(const std::string& filePath, const std
 
 	// ******************************* //
    //   конец writeFileForEncryption  //
-  // ******************************* //
+	// ******************************* //
+}
+
+void AesEncryptor::addEncryptToPath(std::string& filePath)
+{
+	int i;
+	for(i = filePath.length(); i > 0 && filePath[i] != '/'; --i);
+	++i;
+	std::string path = filePath.substr(0, i);
+	std::string name = filePath.substr(i, filePath.length()-1);
+	name = "encrypted_" + name;
+	filePath = path+name;
 }

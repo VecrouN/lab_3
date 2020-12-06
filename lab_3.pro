@@ -16,6 +16,8 @@ SOURCES += \
     Encryptor.cpp \
     RsaDecryptor.cpp \
     RsaEncryptor.cpp \
+    createNewKeys.cpp \
+    PaintScene.cpp \
     main.cpp \
     MainWindow.cpp
 
@@ -26,11 +28,15 @@ HEADERS += \
     Decryptor.h \
     Encryptor.h \
     MainWindow.h \
+    PaintScene.h \
     RsaDecryptor.h \
-    RsaEncryptor.h
+    RsaEncryptor.h \
+    createNewKeys.h
 
 FORMS += \
-    MainWindow.ui
+    MainWindow.ui \
+    MainWindow.ui \
+    createNewKeys.ui
 
 LIBS += -L/usr/lib/crypto++ -lcrypto++
 INCS += -I/usr/include/crypto++
