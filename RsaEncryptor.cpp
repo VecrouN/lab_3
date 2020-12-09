@@ -48,7 +48,7 @@ void RsaEncryptor::writeKeyInFileForEncryptor(CryptoPP::RSA::PublicKey m_PublicR
 
     fileToRead.open("aesKey.txt",std::ios::app);// дозапись ключа AES
     if (fileToRead.is_open()){
-        fileToRead << PublicKeyString;
+        fileToRead << PublicKeyString << std::endl;
         fileToRead << aesKeyString;
     }
     fileToRead.close();
@@ -65,11 +65,11 @@ std::string RsaEncryptor::rsaEncryptKey(std::string& aesKeyString)
 }
 
 void RsaEncryptor::savePrivateKey(CryptoPP::RSA::PrivateKey m_PrivateRsaKey)
-{//сохранение приватного ключа вместе с шифрованным ключом для AES
+{//сохранение приватного ключа
     std::ofstream fileToRead;
     std::string PrivateKeyString = "";
     CryptoPP::StringSource sourse(PrivateKeyString,true);
-    m_PublicRsaKey.Save(sourse); //сохранение ключа в строку?
+    m_PrivateRsaKey.Save(sourse); //сохранение ключа в строку?
 
     fileToRead.open("privateRsaKey.txt");
     if (fileToRead.is_open()){
