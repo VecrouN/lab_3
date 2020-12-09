@@ -10,20 +10,23 @@
 RsaEncryptor::RsaEncryptor()
 {
     CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
-    m_PrivateRsaKey.Initialize(n,e,d);
+    
     m_PublicRsaKey.Initialize(e,d);
+    m_PrivateRsaKey.Initialize(n,e,d);
 }
 
-RsaEncryptor::RsaEncryptor(RsaEncryptor &other_):m_PrivateRsaKey(other_.m_PrivateRsaKey),
-    m_PublicRsaKey(other_.m_PublicRsaKey){
+RsaEncryptor::RsaEncryptor(RsaEncryptor &other_):m_PublicRsaKey(other_.m_PublicRsaKey),
+    m_PrivateRsaKey(other_.m_PrivateRsaKey){
 
 }
 
 RsaEncryptor &RsaEncryptor::operator=(const RsaEncryptor& other_)
 {
     CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
-    m_PrivateRsaKey.Initialize(n,e,d);
+        
     m_PublicRsaKey.Initialize(e,d);
+    m_PrivateRsaKey.Initialize(n,e,d);
+    
     if (this==&other_)
         return *this;
     else
@@ -33,24 +36,25 @@ RsaEncryptor &RsaEncryptor::operator=(const RsaEncryptor& other_)
                 (other_.m_PublicRsaKey.GetPublicExponent()==m_PublicRsaKey.GetPublicExponent()||
                  other_.m_PublicRsaKey.GetModulus() == m_PublicRsaKey.GetModulus()))
             return *this;
-
-
 }
 
 RsaEncryptor::~RsaEncryptor()
 {
     CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
-    m_PrivateRsaKey.Initialize(n,e,d);
+
     m_PublicRsaKey.Initialize(e,d);
+    m_PrivateRsaKey.Initialize(n,e,d);
 }
 
 void RsaEncryptor::rsaGenerateKey()
 {//генерация ключей
     CryptoPP::AutoSeededRandomPool rnd;
     CryptoPP::InvertibleRSAFunction parameters;
+    
     parameters.GenerateRandomWithKeySize (rnd, CryptoPP::AES::DEFAULT_KEYLENGTH);
-    CryptoPP::RSA::PrivateKey m_PrivateRsaKey(parameters);
+
     CryptoPP::RSA::PublicKey m_PublicRsaKey(parameters);
+    CryptoPP::RSA::PrivateKey m_PrivateRsaKey(parameters);
 }
 
 void RsaEncryptor::writeKeyInFileForEncryptor(CryptoPP::RSA::PublicKey m_PublicRsaKey, std::string& aesKeyString)
