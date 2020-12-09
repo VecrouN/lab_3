@@ -3,6 +3,9 @@
 
 #include "Encryptor.h"
 
+#include <crypto++/modes.h>
+#include <crypto++/rsa.h>
+
 class RsaEncryptor : public Encryptor
 {
 public:
