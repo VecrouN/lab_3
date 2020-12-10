@@ -1,4 +1,4 @@
-#include "rsa.h"
+#include "RsaClass.h"
 
 #include <iostream>
 #include <fstream>
@@ -7,7 +7,7 @@
 #include <crypto++/osrng.h>
 #include <crypto++/aes.h>
 
-RSA::RSA()
+RsaClass::RsaClass()
 { // конструктор
     CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
     m_PublicRsaKey.Initialize(e,d);
@@ -15,12 +15,12 @@ RSA::RSA()
 }
 
 // конструктор копирования
-RSA::RSA(RSA &other_):m_PublicRsaKey(other_.m_PublicRsaKey),
+RsaClass::RsaClass(RsaClass &other_):m_PublicRsaKey(other_.m_PublicRsaKey),
     m_PrivateRsaKey(other_.m_PrivateRsaKey){
 
 }
 
-RSA &RSA::operator=(const RSA &other_)
+RsaClass &RsaClass::operator=(const RsaClass &other_)
 {// перегрузка оператора сравнения
     CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
 
@@ -39,7 +39,7 @@ RSA &RSA::operator=(const RSA &other_)
     }
 }
 
-RSA::~RSA()
+RsaClass::~RsaClass()
 { // деструктор
     CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
 
@@ -47,7 +47,7 @@ RSA::~RSA()
     m_PrivateRsaKey.Initialize(n,e,d);
 }
 
-void RSA::rsaGenerateKey()
+void RsaClass::rsaGenerateKey()
 { //генерация ключей
     CryptoPP::AutoSeededRandomPool rnd;
     CryptoPP::InvertibleRSAFunction parameters;
@@ -58,16 +58,17 @@ void RSA::rsaGenerateKey()
     CryptoPP::RSA::PrivateKey m_PrivateRsaKey(parameters);
 }
 
-CryptoPP::RSA::PublicKey RSA::getPublicRsaKey() const {
+CryptoPP::RSA::PublicKey RsaClass::getPublicRsaKey() const {
     return m_PublicRsaKey;
 }
 
-CryptoPP::RSA::PrivateKey RSA::getPrivateRsaKey() const {
+CryptoPP::RSA::PrivateKey RsaClass::getPrivateRsaKey() const {
     return m_PrivateRsaKey;
 }
 
-std::string RSA::getStringPublicRsaKey(CryptoPP::RSA::PublicKey m_PublicRsaKey) const {
+std::string RsaClass::getStringPublicRsaKey(CryptoPP::RSA::PublicKey m_PublicRsaKey) const {
 // метод принимает открытый ключ в стандартном формате, возвращает его в виде строки
+      
     std::string publicRsaKeyString;
       
     CryptoPP::StringSink sourse(publicRsaKeyString);
@@ -76,7 +77,7 @@ std::string RSA::getStringPublicRsaKey(CryptoPP::RSA::PublicKey m_PublicRsaKey) 
     return publicRsaKeyString;
 }
 
-std::string RSA::getStringRsaPrivateKey(CryptoPP::RSA::PublicKey m_PrivateRsaKey) const {
+std::string RsaClass::getStringRsaPrivateKey(CryptoPP::RSA::PublicKey m_PrivateRsaKey) const {
 // метод принимает закрытый ключ в стандартном формате, возвращает его в виде строки
       
     std::string privateRsaKeyString;
