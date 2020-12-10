@@ -61,6 +61,10 @@ std::string RsaEncryptor::rsaEncryptKey(std::string& aesKeyString)
     CryptoPP::RSAES_OAEP_SHA_Encryptor e(m_PublicRsaKey);
     CryptoPP::StringSource(aesKeyString, true,
                            new CryptoPP::PK_EncryptorFilter(rng,e,new CryptoPP::StringSink(encryptesText)));
+
+    savePrivateKey(m_PrivateRsaKey); // сохраним закрытый ключ для дальнейшей расшифровки
+    writeKeyInFileForEncryptor(m_PublicRsaKey, encryptesText); // сохраним полученное шифрование в файл
+
     return encryptesText;
 }
 
@@ -75,5 +79,4 @@ void RsaEncryptor::savePrivateKey(CryptoPP::RSA::PrivateKey m_PrivateRsaKey)
     }
     
     fileToRead.close();
-
 }
