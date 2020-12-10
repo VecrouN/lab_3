@@ -1,5 +1,5 @@
-#ifndef RSA_H
-#define RSA_H
+#ifndef RSACLASS_H
+#define RSACLASS_H
 
 // Подключение необходимых библиотек и модулей
 #include <crypto++/rsa.h>
@@ -8,16 +8,15 @@
 #include <fstream>
 
 // Класс содержит основные методы и поля для работы с алгоритмом RSA
-class RSA
+class RsaClass
 {
 public:
-    RSA();// конструктор
-    RSA(RSA& other_); // конструктор копирования
-    RSA& operator=(const RSA& other_);// перегрузка оператора копирования
-    ~RSA(); // деструктор
+    RsaClass();// конструктор
+    RsaClass(RsaClass& other_); // конструктор копирования
+    RsaClass& operator=(const RsaClass& other_);// перегрузка оператора копирования
+    ~RsaClass(); // деструктор
 
     void rsaGenerateKey(); // генерация ключей
-    
     CryptoPP::RSA::PublicKey getPublicRsaKey() const; // получение публичного ключа
     CryptoPP::RSA::PrivateKey getPrivateRsaKey() const; // получение закрытого ключа
 
@@ -40,4 +39,4 @@ public:
       CryptoPP::RSA::PrivateKey m_PrivateRsaKey; // закрытый ключ шифрования
 };
 
-#endif // RSA_H
+#endif // RSACLASS_H
