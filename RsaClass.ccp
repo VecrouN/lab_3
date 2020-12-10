@@ -88,14 +88,14 @@ std::string RsaClass::getStringRsaPrivateKey(CryptoPP::RSA::PublicKey m_PrivateR
     return privateRsaKeyString;
 }
 
-void setPublicRsaKey(std::string& publicRsaKeyString, CryptoPP::RSA::PublicKey m_PublicRsaKey) {
+void setPublicRsaKey(std::string publicRsaKeyString, CryptoPP::RSA::PublicKey m_PublicRsaKey) {
 // метод принимает открытый ключ как строку, и записывает его в поле класса
       
     CryptoPP::StringSource sourse(publicRsaKeyString,true);
     m_PublicRsaKey.Load(sourse);
 }
 
-void setPrivateRsaKey(std::string& privateRsaKeyString, CryptoPP::RSA::PublicKey m_PrivateRsaKey) {
+void setPrivateRsaKey(std::string privateRsaKeyString, CryptoPP::RSA::PublicKey m_PrivateRsaKey) {
 // метод принимает открытый ключ как строку, и записывает его в поле класса
 
     CryptoPP::StringSource sourse(privateRsaKeyString,true);
