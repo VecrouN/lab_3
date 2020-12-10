@@ -35,22 +35,17 @@ AesDecryptor* MainWindow::getAesDecryptor()
 void MainWindow::setNewIV_PublicKey()
 {
 	byte tmpArray[CryptoPP::AES::BLOCKSIZE];
-	for(int i = 0; i < CryptoPP::AES::BLOCKSIZE-1; ++i)
+	for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
 	{
 		tmpArray[i] = this->m_TmpByteArray[i];
 	}
 	m_aesEncryptor->setNewInitializationVector(tmpArray);
-	for(int i = CryptoPP::AES::BLOCKSIZE; i < CryptoPP::AES::BLOCKSIZE+CryptoPP::AES::DEFAULT_KEYLENGTH-1; ++i)
+	for(int i = CryptoPP::AES::BLOCKSIZE; i < CryptoPP::AES::BLOCKSIZE+CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
 	{
 		tmpArray[i-CryptoPP::AES::BLOCKSIZE] = this->m_TmpByteArray[i];
 	}
-	//
-	//
-	//
-	//
 
-	memset(tmpArray, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH);
-	m_aesEncryptor->setNewPrivateAesKey(m_TmpByteArray);
+	m_aesEncryptor->setNewPrivateAesKey(tmpArray);
 	m_aesEncryptor->setIsNewKey(true);
 	m_aesEncryptor->setIsKeyToEncryptReady(true);
 }

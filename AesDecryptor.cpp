@@ -70,15 +70,14 @@ AesDecryptor::~AesDecryptor()
 	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
 }
 
+
 void AesDecryptor::aesDecryptFile(const std::string& filePath)
 {
 	std::string encryptText = "";
 	std::string decrypTedtext = "";
 	readFileForDecryption(filePath, encryptText);
-	std::cout<<"AesDecryptor.cpp 78|"<<m_PublicInitializationVector<<"|"<<std::endl;
-	std::cout<<std::endl;
 
-	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH );
 
 	CryptoPP::AES::Decryption aesDecryption( this->m_PrivateAesKey , CryptoPP::AES::DEFAULT_KEYLENGTH);
 	CryptoPP::CBC_Mode_ExternalCipher::Decryption cbcDecryption( aesDecryption, this->m_PublicInitializationVector );
@@ -102,9 +101,6 @@ void AesDecryptor::readFileForDecryption(const std::string& filePath, std::strin
 
 	std::string encryptedText = "";
 	std:: string tmpString = "";
-	std::cout<<"readedFile.is_open() = |"<<readedFile.is_open()<<"|"<<std::endl;
-	std::cout<<"readedFile.is_open() = |"<<readedFile.is_open()<<"|"<<std::endl;
-	std::cout<<"readedFile.is_open() = |"<<readedFile.is_open()<<"|"<<std::endl;
 
 	if(readedFile.is_open())
 	{
@@ -119,14 +115,8 @@ void AesDecryptor::readFileForDecryption(const std::string& filePath, std::strin
 		{
 			textForDecryption.push_back(temp);
 		}
-
-		//readedFile.read(str.data(), size);
-
 	}
 	readedFile.close();
-
-	std::cout<<std::endl;
-	std::cout<<"textForDecryption = |"<<textForDecryption<<"|"<<std::endl;
 
 
 	// ******************************* //

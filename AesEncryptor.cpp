@@ -71,17 +71,12 @@ void AesEncryptor::aesEncryptFile(const std::string& filePath)
 	this->readFileForEncryption(filePath, textForEncryption);
 
 
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
 
 	memset(m_PrivateAesKey, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH);
-	memset(m_PublicInitializationVector, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH);
+
+
+
+
 	CryptoPP::AES::Encryption aesEncryption(m_PrivateAesKey, CryptoPP::AES::DEFAULT_KEYLENGTH); // шифр
 	CryptoPP::CBC_Mode_ExternalCipher::Encryption cbcEncryption( aesEncryption, m_PublicInitializationVector ); // режим работы cbc
 
@@ -167,19 +162,10 @@ void AesEncryptor::writeFileForEncryption(const std::string& filePath, const std
 		{
 			buffString.push_back(static_cast<char>(m_PublicInitializationVector[i]));
 		}
-		//outFile.write(reinterpret_cast<char *>(&size), sizeof(encryptedText.size()));
 		outFile.write(buffString.c_str(), buffString.size());
 		outFile.write(encryptedText.c_str(),size);
 
-
-
-		//outFile<<this->m_PublicInitializationVector<<"\n";
-		//outFile<<test<<"\n";
-		//outFile<<encryptedText;
 	}
-	std::cout<<"encryptedText = |"<<encryptedText<<"|"<<std::endl;
-	std::cout<<std::endl;
-
 	outFile.close();
 
 
