@@ -17,15 +17,21 @@ public:
     ~RSA(); // деструктор
 
     void rsaGenerateKey(); // генерация ключей
-   
-    CryptoPP::RSA::PublicKey getPublicRsaKey(); // получение публичного ключа
-    CryptoPP::RSA::PrivateKey getPrivateRsaKey(); // получение закрытого ключа
-   
-    std::string getStringPublicRsaKey(); // получение публичного ключа в виде строки
-    std::string getStringRsaPrivateKey(); // получение закрытого ключа в виде строки
-   
-    CryptoPP::RSA::PublicKey setPublicRsaKey(); // функция, которая устанавливает поле открытого ключа
-    CryptoPP::RSA::PrivateKey setPrivateRsaKey(); // функция, которая устанавливает поле закрытого ключа
+    
+    CryptoPP::RSA::PublicKey getPublicRsaKey() const; // получение публичного ключа
+    CryptoPP::RSA::PrivateKey getPrivateRsaKey() const; // получение закрытого ключа
+
+    // получение публичного ключа в виде строки
+    std::string getStringPublicRsaKey(CryptoPP::RSA::PublicKey m_PublicRsaKey) const;
+
+    // получение закрытого ключа в виде строки
+    std::string getStringRsaPrivateKey(CryptoPP::RSA::PublicKey m_PrivateRsaKey) const;
+
+    // функция, которая устанавливает поле открытого ключа
+    void setPublicRsaKey(std::string& PublicRsaKeyString, CryptoPP::RSA::PublicKey m_PublicRsaKey);
+
+    // функция, которая устанавливает поле закрытого ключа
+    void setPrivateRsaKey(std::string& PrivateRsaKeyString,CryptoPP::RSA::PublicKey m_PrivateRsaKey);
 
   protected:
 
