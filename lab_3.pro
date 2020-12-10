@@ -35,7 +35,6 @@ HEADERS += \
 
 FORMS += \
     MainWindow.ui \
-    MainWindow.ui \
     createNewKeys.ui
 
 LIBS += -L/usr/lib/crypto++ -lcrypto++

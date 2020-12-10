@@ -11,16 +11,13 @@ createNewKeys::createNewKeys(byte *_array,  int *readyIndex, QWidget *parent) :
 	scene = new PaintScene(_array, readyIndex, this);
 
 	ui->graphicsView->setScene(scene);
-
+	m_parent = parent;
 	connect(scene, &PaintScene::changed, this, &createNewKeys::isReady);
 }
 
 createNewKeys::~createNewKeys()
 {
 	delete ui;
-	delete  scene;
-	delete m_readyIndex;
-	delete m_array;
 }
 
 void createNewKeys::isReady()
@@ -35,20 +32,7 @@ void createNewKeys::isReady()
 
 void createNewKeys::on_okButtonBox_accepted()
 {
-	std::cout<<"new: "<<std::endl;
-
-	for(int i = 0; i < CryptoPP::AES::BLOCKSIZE + CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
-	{
-
-		std::cout<<(0xFF & m_array[i])<<"  ";
-	}
-	std::cout<<std::endl;
-	for(int i = 0; i < CryptoPP::AES::BLOCKSIZE + CryptoPP::AES::DEFAULT_KEYLENGTH ; ++i)
-	{
-
-		std::cout<<static_cast<char>(m_array[i])<<"  ";
-	}
-	std::cout<<std::endl;
+	//this->m_parent->getAesEncryptor();
 }
 
 void createNewKeys::on_buttonBox_2_rejected()

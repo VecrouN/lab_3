@@ -5,23 +5,20 @@ AesEncryptor::AesEncryptor()
 {
 	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
 	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+	memset( m_PrivateTmpArray , 0x00, CryptoPP::AES::BLOCKSIZE+ CryptoPP::AES::DEFAULT_KEYLENGTH);
+	m_isNewKey = false;
+	m_isKeyToEncryptReady = false;
 }
 
 AesEncryptor::AesEncryptor(AesEncryptor& _other)
 {
 	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
 	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
-	memset( m_PrivateTmpArray , 0x00, CryptoPP::AES::BLOCKSIZE+ CryptoPP::AES::DEFAULT_KEYLENGTH); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
-
-	for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
-	{
-		this->m_PrivateAesKey[i] = _other.m_PrivateAesKey[i];
-	}
-
-	for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
-	{
-		this->m_PublicInitializationVector[i] = _other.m_PublicInitializationVector[i];
-	}
+	memset( m_PrivateTmpArray , 0x00, CryptoPP::AES::BLOCKSIZE+ CryptoPP::AES::DEFAULT_KEYLENGTH);
+	this->setNewPrivateAesKey(_other.m_PrivateAesKey);
+	this->setNewInitializationVector(_other.m_PublicInitializationVector);
+	this->m_isNewKey = _other.m_isNewKey;
+	m_isKeyToEncryptReady = _other.m_isKeyToEncryptReady;
 }
 
 AesEncryptor& AesEncryptor::operator=(const AesEncryptor& _other)
@@ -33,31 +30,28 @@ AesEncryptor& AesEncryptor::operator=(const AesEncryptor& _other)
 
 	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
 	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+	memset( m_PrivateTmpArray , 0x00, CryptoPP::AES::BLOCKSIZE+ CryptoPP::AES::DEFAULT_KEYLENGTH);
 
-	for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
-	{
-		this->m_PrivateAesKey[i] = _other.m_PrivateAesKey[i];
-	}
-
-	for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
-	{
-		this->m_PublicInitializationVector[i] = _other.m_PublicInitializationVector[i];
-	}
+	this->setNewPrivateAesKey(_other.m_PrivateAesKey);
+	this->setNewInitializationVector(_other.m_PublicInitializationVector);
+	this->m_isNewKey = _other.m_isNewKey;
+	m_isKeyToEncryptReady = _other.m_isKeyToEncryptReady;
 
 	return *this;
 }
 
 AesEncryptor::~AesEncryptor()
 {
-	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
-	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+
 }
 
 
 void AesEncryptor::aesEncryptFile(const std::string& filePath)
 {
-
-	this->createNewPublicInitializationVector(this->m_PublicInitializationVector);
+	if(!this->m_isNewKey)
+	{
+		this->createNewPublicInitializationVector(this->m_PublicInitializationVector);
+	}
 
 	std::string textForEncryption = "";
 	this->readFileForEncryption(filePath, textForEncryption);
@@ -70,6 +64,8 @@ void AesEncryptor::aesEncryptFile(const std::string& filePath)
 	CryptoPP::StreamTransformationFilter stfEncryptor(cbcEncryption, new CryptoPP::StringSink( encryptedText ) );
 	stfEncryptor.Put( reinterpret_cast<const unsigned char*>( textForEncryption.c_str() ), textForEncryption.length()); // reinterpret_cast преобразование указателя
 	stfEncryptor.MessageEnd();
+
+	writeFileForEncryption(filePath, encryptedText);
 
 	// ************************ //
    //   конец aesEncryptFile   //
@@ -151,4 +147,36 @@ void AesEncryptor::addEncryptToPath(std::string& filePath)
 	std::string name = filePath.substr(i, filePath.length()-1);
 	name = "encrypted_" + name;
 	filePath = path+name;
+}
+
+void AesEncryptor::setIsNewKey(bool _newValue)
+{
+	this->m_isNewKey = _newValue;
+}
+
+void AesEncryptor::setNewInitializationVector(const byte _newPublicInitializationVector[])
+{
+	for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
+	{
+		this->m_PublicInitializationVector[i] = _newPublicInitializationVector[i];
+	}
+}
+
+void AesEncryptor::setNewPrivateAesKey(const byte _newPrivateAesKey[])
+{
+	for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
+	{
+		this->m_PrivateAesKey[i] = _newPrivateAesKey[i];
+	}
+}
+
+
+void AesEncryptor::setIsKeyToEncryptReady(bool _isKeyToEncryptReady)
+{
+	this->m_isKeyToEncryptReady = _isKeyToEncryptReady;
+}
+
+bool AesEncryptor::getIsKeyToEncryptReady()
+{
+	return this->m_isKeyToEncryptReady;
 }

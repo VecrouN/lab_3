@@ -21,7 +21,6 @@ public:
 private:
 	QPointF previousPoint;      // Координаты предыдущей точки
 
-private:
 	// Для рисования используем события мыши
 	void mousePressEvent(QGraphicsSceneMouseEvent * event);
 	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);

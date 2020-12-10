@@ -18,6 +18,7 @@ class createNewKeys : public QDialog
 		explicit createNewKeys(byte *_array,  int *readyIndex, QWidget *parent = nullptr);
 		~createNewKeys();
 
+
 	private slots:
 		void isReady();
 
@@ -30,6 +31,7 @@ class createNewKeys : public QDialog
 		PaintScene *scene;
 		int *m_readyIndex;
 		byte *m_array;
+		QWidget *m_parent;
 };
 
 #endif // CREATENEWKEYS_H
