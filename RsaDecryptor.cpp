@@ -1,12 +1,5 @@
 #include "RsaDecryptor.h"
 
-RsaDecryptor::RsaDecryptor()
-{
-
-}
-#include "RsaDecryptor.h"
-
-
 #include <iostream>
 #include <fstream>
 #include <crypto++/modes.h>

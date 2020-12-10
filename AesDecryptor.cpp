@@ -4,12 +4,27 @@ AesDecryptor::AesDecryptor()
 {
 	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
 	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+
+	m_isKeyToDecryptReady = false;
+	m_parent = nullptr;
+}
+
+AesDecryptor::AesDecryptor(QWidget *_parent)
+{
+	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
+	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+
+	m_isKeyToDecryptReady = false;
+	m_parent = _parent;
 }
 
 AesDecryptor::AesDecryptor(AesDecryptor& _other)
 {
 	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
 	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+
+	m_isKeyToDecryptReady = _other.m_isKeyToDecryptReady;
+	m_parent = _other.m_parent;
 
 	for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
 	{
@@ -31,6 +46,9 @@ AesDecryptor& AesDecryptor::operator=(const AesDecryptor& _other)
 
 	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
 	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+
+	m_isKeyToDecryptReady = _other.m_isKeyToDecryptReady;
+	m_parent = _other.m_parent;
 
 	for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
 	{
@@ -134,5 +152,24 @@ void AesDecryptor::addDecryptToPath(std::string& filePath)
 	name = "decrypted_" + name;
 	filePath = path+name;
 
+}
+
+void AesDecryptor::setNewPrivateAesKey(const byte _newPrivateAesKey[])
+{
+	for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
+	{
+		this->m_PrivateAesKey[i] = _newPrivateAesKey[i];
+	}
+}
+
+void AesDecryptor::setIsKeyToDecryptReady(bool _isKeyToEncryptReady)
+{
+	this->m_isKeyToDecryptReady = _isKeyToEncryptReady;
+
+}
+
+bool AesDecryptor::getIsKeyToDecryptReady()
+{
+	return m_isKeyToDecryptReady;
 }
 
