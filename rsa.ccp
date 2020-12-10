@@ -8,19 +8,20 @@
 #include <crypto++/aes.h>
 
 RSA::RSA()
-{
+{ // конструктор
     CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
     m_PublicRsaKey.Initialize(e,d);
     m_PrivateRsaKey.Initialize(n,e,d);
 }
 
+// конструктор копирования
 RSA::RSA(RSA &other_):m_PublicRsaKey(other_.m_PublicRsaKey),
     m_PrivateRsaKey(other_.m_PrivateRsaKey){
 
 }
 
 RSA &RSA::operator=(const RSA &other_)
-{
+{// перегрузка оператора сравнения
     CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
 
     m_PublicRsaKey.Initialize(e,d);
@@ -39,7 +40,7 @@ RSA &RSA::operator=(const RSA &other_)
 }
 
 RSA::~RSA()
-{
+{ // деструктор
     CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
 
     m_PublicRsaKey.Initialize(e,d);
@@ -47,7 +48,7 @@ RSA::~RSA()
 }
 
 void RSA::rsaGenerateKey()
-{//генерация ключей
+{ //генерация ключей
     CryptoPP::AutoSeededRandomPool rnd;
     CryptoPP::InvertibleRSAFunction parameters;
 
@@ -55,35 +56,47 @@ void RSA::rsaGenerateKey()
 
     CryptoPP::RSA::PublicKey m_PublicRsaKey(parameters);
     CryptoPP::RSA::PrivateKey m_PrivateRsaKey(parameters);
-
 }
 
-CryptoPP::RSA::PublicKey RSA::getPublicRsaKey()
-{
-
+CryptoPP::RSA::PublicKey RSA::getPublicRsaKey() const {
+    return m_PublicRsaKey;
 }
 
-CryptoPP::RSA::PrivateKey RSA::getPrivateRsaKey()
-{
-
+CryptoPP::RSA::PrivateKey RSA::getPrivateRsaKey() const {
+    return m_PrivateRsaKey;
 }
 
-std::string RSA::getStringPublicRsaKey()
-{
-
+std::string RSA::getStringPublicRsaKey(CryptoPP::RSA::PublicKey m_PublicRsaKey) const {
+// метод принимает открытый ключ в стандартном формате, возвращает его в виде строки
+    std::string publicRsaKeyString;
+      
+    CryptoPP::StringSink sourse(publicRsaKeyString);
+    m_PublicRsaKey.Save(sourse);
+      
+    return publicRsaKeyString;
 }
 
-std::string RSA::getStringRsaPrivateKey()
-{
-
+std::string RSA::getStringRsaPrivateKey(CryptoPP::RSA::PublicKey m_PrivateRsaKey) const {
+// метод принимает закрытый ключ в стандартном формате, возвращает его в виде строки
+      
+    std::string privateRsaKeyString;
+      
+    CryptoPP::StringSink sourse(privateRsaKeyString);
+    m_PrivateRsaKey.Save(sourse);
+      
+    return privateRsaKeyString;
 }
 
-CryptoPP::RSA::PublicKey RSA::setPublicRsaKey()
-{
-
+void setPublicRsaKey(std::string& publicRsaKeyString, CryptoPP::RSA::PublicKey m_PublicRsaKey) {
+// метод принимает открытый ключ как строку, и записывает его в поле класса
+      
+    CryptoPP::StringSource sourse(publicRsaKeyString,true);
+    m_PublicRsaKey.Load(sourse);
 }
 
-CryptoPP::RSA::PrivateKey RSA::setPrivateRsaKey()
-{
+void setPrivateRsaKey(std::string& privateRsaKeyString, CryptoPP::RSA::PublicKey m_PrivateRsaKey) {
+// метод принимает открытый ключ как строку, и записывает его в поле класса
 
+    CryptoPP::StringSource sourse(privateRsaKeyString,true);
+    m_PrivateRsaKey.Load(sourse);
 }
