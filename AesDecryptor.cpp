@@ -1,4 +1,5 @@
 #include "AesDecryptor.h"
+#include <iostream>
 
 AesDecryptor::AesDecryptor()
 {
@@ -74,7 +75,10 @@ void AesDecryptor::aesDecryptFile(const std::string& filePath)
 	std::string encryptText = "";
 	std::string decrypTedtext = "";
 	readFileForDecryption(filePath, encryptText);
+	std::cout<<"AesDecryptor.cpp 78|"<<m_PublicInitializationVector<<"|"<<std::endl;
+	std::cout<<std::endl;
 
+	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
 
 	CryptoPP::AES::Decryption aesDecryption( this->m_PrivateAesKey , CryptoPP::AES::DEFAULT_KEYLENGTH);
 	CryptoPP::CBC_Mode_ExternalCipher::Decryption cbcDecryption( aesDecryption, this->m_PublicInitializationVector );
@@ -93,29 +97,37 @@ void AesDecryptor::aesDecryptFile(const std::string& filePath)
 void AesDecryptor::readFileForDecryption(const std::string& filePath, std::string& textForDecryption)
 {
 	std::ifstream readedFile;
-	readedFile.open(filePath);
+	readedFile >> std::noskipws;
+	readedFile.open(filePath, std::ifstream::binary);
+
 	std::string encryptedText = "";
 	std:: string tmpString = "";
-	memset( this->m_PublicInitializationVector, 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+	std::cout<<"readedFile.is_open() = |"<<readedFile.is_open()<<"|"<<std::endl;
+	std::cout<<"readedFile.is_open() = |"<<readedFile.is_open()<<"|"<<std::endl;
+	std::cout<<"readedFile.is_open() = |"<<readedFile.is_open()<<"|"<<std::endl;
 
 	if(readedFile.is_open())
 	{
-
-		getline(readedFile, tmpString);
+		char temp;
+		textForDecryption = "";
 		for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
 		{
-
-			this->m_PublicInitializationVector[i] = tmpString[i];
+			readedFile.read(&temp, sizeof(char));
+			m_PublicInitializationVector[i] = static_cast<byte>(temp);
 		}
-
-		while (getline(readedFile, tmpString))
+		while (readedFile.read(&temp, sizeof(char)))
 		{
-
-			encryptedText.append(tmpString+"\n");
+			textForDecryption.push_back(temp);
 		}
+
+		//readedFile.read(str.data(), size);
+
 	}
 	readedFile.close();
-	textForDecryption = encryptedText;
+
+	std::cout<<std::endl;
+	std::cout<<"textForDecryption = |"<<textForDecryption<<"|"<<std::endl;
+
 
 	// ******************************* //
    //   конец readFileForDecryption   //
@@ -128,6 +140,7 @@ void AesDecryptor::writeFileForDecryption(const std::string& filePath, const std
 	std::ofstream outFile;
 
 	std::string outFilePath = filePath;
+	addDecryptToPath(outFilePath);
 
 	outFile.open(outFilePath);
 	if(outFile.is_open())
@@ -135,6 +148,9 @@ void AesDecryptor::writeFileForDecryption(const std::string& filePath, const std
 		outFile<<decryptedText;
 	}
 	outFile.close();
+	QMessageBox msgBox;
+	msgBox.setText("Дешифровано.");
+	msgBox.exec();
 
 
 	// ******************************** //

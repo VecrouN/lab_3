@@ -81,6 +81,7 @@ void AesEncryptor::aesEncryptFile(const std::string& filePath)
 	//
 
 	memset(m_PrivateAesKey, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH);
+	memset(m_PublicInitializationVector, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH);
 	CryptoPP::AES::Encryption aesEncryption(m_PrivateAesKey, CryptoPP::AES::DEFAULT_KEYLENGTH); // шифр
 	CryptoPP::CBC_Mode_ExternalCipher::Encryption cbcEncryption( aesEncryption, m_PublicInitializationVector ); // режим работы cbc
 
@@ -110,6 +111,7 @@ void AesEncryptor::createNewPublicInitializationVector(byte (&changedPublicIniti
 	char tmpChar;
 	srand(static_cast<unsigned int>(time(0))); //  сид для случайного числа
 	memset( changedPublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE );
+
 	for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
 	{
 		do
@@ -132,7 +134,7 @@ void AesEncryptor::readFileForEncryption(const std::string& filePath, std::strin
 	fileToRead.open(filePath);
 	if(fileToRead.is_open())
 	{
-		textForEncryption = "";
+		textForEncryption.clear();
 		while (getline(fileToRead, tmpString))
 		{
 			textForEncryption.append(tmpString+"\n");
@@ -152,12 +154,32 @@ void AesEncryptor::writeFileForEncryption(const std::string& filePath, const std
 	std::string outFilePath = filePath;
 	addEncryptToPath(outFilePath);
 
-	outFile.open(outFilePath);
+	outFile.open(outFilePath, std::ofstream::binary);
+
+	std::string test (CryptoPP::AES::BLOCKSIZE, 'A');
+
+
 	if(outFile.is_open())
 	{
-		outFile<<this->m_PublicInitializationVector<<"\n";
-		outFile<<encryptedText;
+		size_t size=encryptedText.size();
+		std::string buffString = "";
+		for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
+		{
+			buffString.push_back(static_cast<char>(m_PublicInitializationVector[i]));
+		}
+		//outFile.write(reinterpret_cast<char *>(&size), sizeof(encryptedText.size()));
+		outFile.write(buffString.c_str(), buffString.size());
+		outFile.write(encryptedText.c_str(),size);
+
+
+
+		//outFile<<this->m_PublicInitializationVector<<"\n";
+		//outFile<<test<<"\n";
+		//outFile<<encryptedText;
 	}
+	std::cout<<"encryptedText = |"<<encryptedText<<"|"<<std::endl;
+	std::cout<<std::endl;
+
 	outFile.close();
 
 
@@ -173,7 +195,7 @@ void AesEncryptor::addEncryptToPath(std::string& filePath)
 	++i;
 	std::string path = filePath.substr(0, i);
 	std::string name = filePath.substr(i, filePath.length()-1);
-	name = "encrypted_" + name;
+	name = "encrypted_" + name + ".dat";
 	filePath = path+name;
 }
 

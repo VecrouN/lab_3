@@ -5,6 +5,7 @@
 
 #include <fstream>
 #include <QFileDialog>
+#include <QMessageBox>
 
 #include <crypto++/aes.h>
 

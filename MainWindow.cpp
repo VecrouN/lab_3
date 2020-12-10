@@ -105,8 +105,7 @@ void MainWindow::on_pushButton_2_clicked() // кнопка дешифровки
 {
 	if(this->m_aesDecryptor->getIsKeyToDecryptReady() && this->m_isTextToDecryptReady)
 	{
-
-		this->m_aesDecryptor->aesDecryptFile(this->m_filePathToEncrypt);
+		this->m_aesDecryptor->aesDecryptFile(this->m_filePathToDecrypt);
 	}
 	else
 	{
@@ -136,7 +135,7 @@ void MainWindow::on_openFileToDecryptPushButoon_clicked() // клик по кн�
 {
 	QString QFileName = QFileDialog::getOpenFileName(this, tr("Open File"),
 													"/home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug",
-													tr("TextFile (*.txt)"));
+													tr("TextFile (*.dat)"));
 	if(QFileName.toStdString() != "")
 	{
 		this->m_filePathToDecrypt = QFileName.toStdString();
