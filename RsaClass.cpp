@@ -16,25 +16,25 @@ RsaClass::RsaClass()
 
 // конструктор копирования
 RsaClass::RsaClass(RsaClass &other_) {
-    other_.m_PrivateRsaKey.SetPrime1(this->m_PrivateRsaKey.GetPrime1());
-    other_.m_PrivateRsaKey.SetPrime2(this->m_PrivateRsaKey.GetPrime2());
-    other_.m_PrivateRsaKey.SetPrivateExponent(this->m_PrivateRsaKey.GetPrivateExponent());
-    other_.m_PublicRsaKey.SetPublicExponent(this->m_PublicRsaKey.GetPublicExponent());
-    other_.m_PublicRsaKey.SetModulus(this->m_PublicRsaKey.GetModulus());
+	
+    this->m_PrivateRsaKey.SetPrime1(other_.m_PrivateRsaKey.GetPrime1());
+    this->m_PrivateRsaKey.SetPrime2(other_.m_PrivateRsaKey.GetPrime2());
+    this->m_PrivateRsaKey.SetPrivateExponent(other_.m_PrivateRsaKey.GetPrivateExponent());
+    this->m_PublicRsaKey.SetPublicExponent(other_.m_PublicRsaKey.GetPublicExponent());
+    this->m_PublicRsaKey.SetModulus(other_.m_PublicRsaKey.GetModulus());
 }
 
-RsaClass &RsaClass::operator=(RsaClass &other_)
+RsaClass &RsaClass::operator=(const RsaClass &other_)
 {// перегрузка оператора сравнения
-    CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
-
+	
     if (this==&other_)
         return *this;
     else {
-        other_.m_PrivateRsaKey.SetPrime1(this->m_PrivateRsaKey.GetPrime1());
-        other_.m_PrivateRsaKey.SetPrime2(this->m_PrivateRsaKey.GetPrime2());
-        other_.m_PrivateRsaKey.SetPrivateExponent(this->m_PrivateRsaKey.GetPrivateExponent());
-        other_.m_PublicRsaKey.SetPublicExponent(this->m_PublicRsaKey.GetPublicExponent());
-        other_.m_PublicRsaKey.SetModulus(this->m_PublicRsaKey.GetModulus());
+    	this->m_PrivateRsaKey.SetPrime1(other_.m_PrivateRsaKey.GetPrime1());
+    	this->m_PrivateRsaKey.SetPrime2(other_.m_PrivateRsaKey.GetPrime2());
+    	this->m_PrivateRsaKey.SetPrivateExponent(other_.m_PrivateRsaKey.GetPrivateExponent());
+    	this->m_PublicRsaKey.SetPublicExponent(other_.m_PublicRsaKey.GetPublicExponent());
+    	this->m_PublicRsaKey.SetModulus(other_.m_PublicRsaKey.GetModulus());
         return *this;
     }
 }
