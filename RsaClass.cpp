@@ -15,41 +15,35 @@ RsaClass::RsaClass()
 }
 
 // конструктор копирования
-RsaClass::RsaClass(RsaClass &other_):m_PublicRsaKey(other_.m_PublicRsaKey),
-    m_PrivateRsaKey(other_.m_PrivateRsaKey){
-
+RsaClass::RsaClass(RsaClass &other_) {
+    other_.m_PrivateRsaKey.SetPrime1(this->m_PrivateRsaKey.GetPrime1());
+    other_.m_PrivateRsaKey.SetPrime2(this->m_PrivateRsaKey.GetPrime2());
+    other_.m_PrivateRsaKey.SetPrivateExponent(this->m_PrivateRsaKey.GetPrivateExponent());
+    other_.m_PublicRsaKey.SetPublicExponent(this->m_PublicRsaKey.GetPublicExponent());
+    other_.m_PublicRsaKey.SetModulus(this->m_PublicRsaKey.GetModulus());
 }
 
-RsaClass &RsaClass::operator=(const RsaClass &other_)
+RsaClass &RsaClass::operator=(RsaClass &other_)
 {// перегрузка оператора сравнения
     CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
 
-	//m_PublicRsaKey.Initialize(e,d);
-	//m_PrivateRsaKey.Initialize(n,e,d);
-
     if (this==&other_)
         return *this;
-
     else {
-
-		/*
-		if ((other_.m_PrivateRsaKey.GetPrime1() == m_PrivateRsaKey.GetPrime1()&&
-                other_.m_PrivateRsaKey.GetPrime2() == m_PrivateRsaKey.GetPrime2()&&
-                other_.m_PrivateRsaKey.GetPrivateExponent() == m_PrivateRsaKey.GetPrivateExponent())&&
-                (other_.m_PublicRsaKey.GetPublicExponent()==m_PublicRsaKey.GetPublicExponent()&&
-                 other_.m_PublicRsaKey.GetModulus() == m_PublicRsaKey.GetModulus()))
-		*/
-		return *this;
+        other_.m_PrivateRsaKey.SetPrime1(this->m_PrivateRsaKey.GetPrime1());
+        other_.m_PrivateRsaKey.SetPrime2(this->m_PrivateRsaKey.GetPrime2());
+        other_.m_PrivateRsaKey.SetPrivateExponent(this->m_PrivateRsaKey.GetPrivateExponent());
+        other_.m_PublicRsaKey.SetPublicExponent(this->m_PublicRsaKey.GetPublicExponent());
+        other_.m_PublicRsaKey.SetModulus(this->m_PublicRsaKey.GetModulus());
+        return *this;
     }
 }
 
 
 RsaClass::~RsaClass()
 { // деструктор
-    CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
-
-	//m_PublicRsaKey.Initialize(e,d);
-	//m_PrivateRsaKey.Initialize(n,e,d);
+    this->m_PublicRsaKey.~RSAFunction();
+    this->m_PrivateRsaKey.~InvertibleRSAFunction();
 }
 
 
