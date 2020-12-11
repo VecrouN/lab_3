@@ -10,8 +10,8 @@
 RsaClass::RsaClass()
 { // конструктор
     CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
-    m_PublicRsaKey.Initialize(e,d);
-    m_PrivateRsaKey.Initialize(n,e,d);
+	//m_PublicRsaKey.Initialize(e,d);
+	//m_PrivateRsaKey.Initialize(n,e,d);
 }
 
 // конструктор копирования
@@ -24,20 +24,22 @@ RsaClass &RsaClass::operator=(const RsaClass &other_)
 {// перегрузка оператора сравнения
     CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
 
-    m_PublicRsaKey.Initialize(e,d);
-    m_PrivateRsaKey.Initialize(n,e,d);
+	//m_PublicRsaKey.Initialize(e,d);
+	//m_PrivateRsaKey.Initialize(n,e,d);
 
     if (this==&other_)
         return *this;
 
     else {
 
-        if ((other_.m_PrivateRsaKey.GetPrime1() == m_PrivateRsaKey.GetPrime1()&&
+		/*
+		if ((other_.m_PrivateRsaKey.GetPrime1() == m_PrivateRsaKey.GetPrime1()&&
                 other_.m_PrivateRsaKey.GetPrime2() == m_PrivateRsaKey.GetPrime2()&&
                 other_.m_PrivateRsaKey.GetPrivateExponent() == m_PrivateRsaKey.GetPrivateExponent())&&
                 (other_.m_PublicRsaKey.GetPublicExponent()==m_PublicRsaKey.GetPublicExponent()&&
                  other_.m_PublicRsaKey.GetModulus() == m_PublicRsaKey.GetModulus()))
-            return *this;
+		*/
+		return *this;
     }
 }
 
@@ -46,8 +48,8 @@ RsaClass::~RsaClass()
 { // деструктор
     CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
 
-    m_PublicRsaKey.Initialize(e,d);
-    m_PrivateRsaKey.Initialize(n,e,d);
+	//m_PublicRsaKey.Initialize(e,d);
+	//m_PrivateRsaKey.Initialize(n,e,d);
 }
 
 
@@ -63,18 +65,18 @@ void RsaClass::rsaGenerateKey()
 	CryptoPP::RSA::PrivateKey PrivateRsaKey(parameters);
 
 
-	this->m_PublicRsaKey = PublicRsaKey;
-	this->m_PrivateRsaKey = PrivateRsaKey;
+	this->m_PublicRsaKey = new CryptoPP::RSA::PublicKey(parameters);
+	this->m_PrivateRsaKey = new CryptoPP::RSA::PrivateKey(parameters);
 	std::cout<<std::endl;
 
 }
 
 CryptoPP::RSA::PublicKey RsaClass::getPublicRsaKey() const {
-    return m_PublicRsaKey;
+	return *m_PublicRsaKey;
 }
 
 CryptoPP::RSA::PrivateKey RsaClass::getPrivateRsaKey() const {
-    return m_PrivateRsaKey;
+	return *m_PrivateRsaKey;
 }
 
 std::string RsaClass::getStringPublicRsaKey(CryptoPP::RSA::PublicKey m_PublicRsaKey) const {
