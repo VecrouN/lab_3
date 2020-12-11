@@ -9,9 +9,11 @@
 
 RsaClass::RsaClass()
 { // конструктор
-    CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
+    //CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
 	//m_PublicRsaKey.Initialize(e,d);
 	//m_PrivateRsaKey.Initialize(n,e,d);
+    setPublicRsaKey("", m_PublicRsaKey);
+    setPrivateRsaKey("",m_PrivateRsaKey);
 }
 
 // конструктор копирования
