@@ -28,9 +28,11 @@ void RsaEncryptor::readKeyInFileForEncryptor(const std::string& filename)
     
     fileToRead.open(filename);
 
-    if (fileToRead.is_open()){
-        while (getline(fileToRead,tmpString)){
-            PrivateKeyString.append(tmpString+"\n");
+	if (fileToRead.is_open())
+	{
+		while (getline(fileToRead,tmpString))
+		{
+			PrivateKeyString.append(tmpString + "\n");
         }
     }
     fileToRead.close();
@@ -38,45 +40,74 @@ void RsaEncryptor::readKeyInFileForEncryptor(const std::string& filename)
     setPrivateRsaKey(PrivateKeyString, m_PrivateRsaKey); // Из полученной строки записываем в поле закрытый ключ
 }
 
-void RsaEncryptor::writeKeyInFileForEncryptor(CryptoPP::RSA::PublicKey m_PublicRsaKey, std::string& aesKeyString)
+void RsaEncryptor::writeKeyInFileForEncryptor(CryptoPP::RSA::PublicKey m_PublicRsaKey, const std::string& aesKeyString)
 {//сохранение публичного ключа вместе с шифрованным ключом для AES
-    std::ofstream fileToRead;
     std::string PublicKeyString = getStringPublicRsaKey(m_PublicRsaKey); //сохранение ключа в строку
     
-    // запись в файл
-    fileToRead.open("aesKey.txt",std::ios::app);
-    if (fileToRead.is_open()){
-        fileToRead << PublicKeyString << std::endl;
-        fileToRead << aesKeyString;
-    }
-    fileToRead.close();
+	std::ofstream outFile;
+	outFile.open("keys/publicRsaKey.dat", std::ofstream::binary);
+
+	if(outFile.is_open())
+	{
+		outFile.write(aesKeyString.c_str(), aesKeyString.size());
+		outFile.write(PublicKeyString.c_str(), PublicKeyString.size());
+	}
+	outFile.close();
+
+	/*
+	std::ofstream fileToRead;
+	// запись в файл
+	fileToRead.open("texts/aesKey.txt");
+	if (fileToRead.is_open())
+	{
+		fileToRead << aesKeyString<<'\n';
+		fileToRead << PublicKeyString;
+	}
+	fileToRead.close();
+	*/
 }
 
-std::string RsaEncryptor::rsaEncryptKey(std::string& aesKeyString)
+std::string RsaEncryptor::rsaEncryptKey(const std::string& aesKeyString)
 { // шифрование ключа AES
     CryptoPP::AutoSeededRandomPool rng;
     std::string encryptesText;
     
     rsaGenerateKey();
-    CryptoPP::RSAES_OAEP_SHA_Encryptor e(m_PublicRsaKey);
-    CryptoPP::StringSource(aesKeyString, true,
-                           new CryptoPP::PK_EncryptorFilter(rng,e,new CryptoPP::StringSink(encryptesText)));
 
-    savePrivateKey(m_PrivateRsaKey); // сохраним закрытый ключ для дальнейшей расшифровки
-    writeKeyInFileForEncryptor(m_PublicRsaKey, encryptesText); // сохраним полученное шифрование в файл
+	CryptoPP::RSAES_OAEP_SHA_Encryptor e(this->m_PublicRsaKey);
+    CryptoPP::StringSource(aesKeyString, true,
+						   new CryptoPP::PK_EncryptorFilter(rng, e, new CryptoPP::StringSink(encryptesText)));
+
+	savePrivateKey(this->m_PrivateRsaKey); // сохраним закрытый ключ для дальнейшей расшифровки
+	writeKeyInFileForEncryptor(this->m_PublicRsaKey, encryptesText); // сохраним полученное шифрование в файл
 
     return encryptesText;
 }
 
 void RsaEncryptor::savePrivateKey(CryptoPP::RSA::PrivateKey m_PrivateRsaKey)
 {//сохранение приватного ключа
-    std::ofstream fileToRead;
+
     std::string PrivateKeyString = getStringRsaPrivateKey(m_PrivateRsaKey); //сохранение ключа в строку
 
-    fileToRead.open("privateRsaKey.txt");
+	std::ofstream outFile;
+	outFile.open("keys/privateRsaKey.dat", std::ofstream::binary);
+
+	if(outFile.is_open())
+	{
+		outFile.write(PrivateKeyString.c_str(), PrivateKeyString.size());
+	}
+	outFile.close();
+
+	/*
+	std::ofstream fileToRead;
+	fileToRead.open("keys/privateRsaKey.txt");
     if (fileToRead.is_open()){
         fileToRead << PrivateKeyString;
     }
     
     fileToRead.close();
+	*/
+
+
+
 }

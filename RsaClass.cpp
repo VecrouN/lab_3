@@ -41,6 +41,7 @@ RsaClass &RsaClass::operator=(const RsaClass &other_)
     }
 }
 
+
 RsaClass::~RsaClass()
 { // деструктор
     CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
@@ -49,15 +50,23 @@ RsaClass::~RsaClass()
     m_PrivateRsaKey.Initialize(n,e,d);
 }
 
+
 void RsaClass::rsaGenerateKey()
 { //генерация ключей
     CryptoPP::AutoSeededRandomPool rnd;
     CryptoPP::InvertibleRSAFunction parameters;
 
-    parameters.GenerateRandomWithKeySize (rnd, CryptoPP::AES::DEFAULT_KEYLENGTH);
+	// parameters.GenerateRandomWithKeySize (rnd, CryptoPP::AES::DEFAULT_KEYLENGTH);
+	parameters.GenerateRandomWithKeySize(rnd, 4096);
 
-    CryptoPP::RSA::PublicKey m_PublicRsaKey(parameters);
-    CryptoPP::RSA::PrivateKey m_PrivateRsaKey(parameters);
+	CryptoPP::RSA::PublicKey PublicRsaKey(parameters);
+	CryptoPP::RSA::PrivateKey PrivateRsaKey(parameters);
+
+
+	this->m_PublicRsaKey = PublicRsaKey;
+	this->m_PrivateRsaKey = PrivateRsaKey;
+	std::cout<<std::endl;
+
 }
 
 CryptoPP::RSA::PublicKey RsaClass::getPublicRsaKey() const {
@@ -90,16 +99,16 @@ std::string RsaClass::getStringRsaPrivateKey(CryptoPP::RSA::PublicKey m_PrivateR
     return privateRsaKeyString;
 }
 
-void setPublicRsaKey(std::string publicRsaKeyString, CryptoPP::RSA::PublicKey m_PublicRsaKey) {
+void RsaClass::setPublicRsaKey(std::string publicRsaKeyString, CryptoPP::RSA::PublicKey m_PublicRsaKey) {
 // метод принимает открытый ключ как строку, и записывает его в поле класса
       
     CryptoPP::StringSource sourse(publicRsaKeyString,true);
     m_PublicRsaKey.Load(sourse);
 }
 
-void setPrivateRsaKey(const std::string &privateRsaKeyString, CryptoPP::RSA::PublicKey m_PrivateRsaKey) {
+void RsaClass::setPrivateRsaKey(const std::string &privateRsaKeyString, CryptoPP::RSA::PublicKey m_PrivateRsaKey) {
 // метод принимает открытый ключ как строку, и записывает его в поле класса
 
 	CryptoPP::StringSource sourse(privateRsaKeyString, true);
-    m_PrivateRsaKey.Load(sourse);
+	m_PrivateRsaKey.Load(sourse);
 }

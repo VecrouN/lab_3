@@ -2,7 +2,6 @@
 #include "ui_MainWindow.h"
 #include <QFileDialog>
 #include <iostream>
-#include <iostream>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -10,6 +9,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
 	this->m_aesEncryptor = new AesEncryptor(this);
+	this->m_aesDecryptor = new AesDecryptor(this);
+	this->m_rsaEncryptor = new RsaEncryptor();
+	this->m_rsaDecryptor = new RsaDecryptor();
+
 	m_isTextToDecryptReady = false;
 	m_isTextToEncryptReady = false;
     ui->setupUi(this);
@@ -40,14 +43,20 @@ void MainWindow::setNewIV_PublicKey()
 		tmpArray[i] = this->m_TmpByteArray[i];
 	}
 	m_aesEncryptor->setNewInitializationVector(tmpArray);
+	std::string tmpConvertString = "";
+
 	for(int i = CryptoPP::AES::BLOCKSIZE; i < CryptoPP::AES::BLOCKSIZE+CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
 	{
 		tmpArray[i-CryptoPP::AES::BLOCKSIZE] = this->m_TmpByteArray[i];
+		tmpConvertString.push_back(static_cast<char>(this->m_TmpByteArray[i]));
 	}
 
 	m_aesEncryptor->setNewPrivateAesKey(tmpArray);
 	m_aesEncryptor->setIsNewKey(true);
 	m_aesEncryptor->setIsKeyToEncryptReady(true);
+	std::string encryptedKey = m_rsaEncryptor->rsaEncryptKey(tmpConvertString);
+
+
 }
 
 

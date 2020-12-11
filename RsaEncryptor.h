@@ -3,9 +3,6 @@
 
 #include "RsaClass.h"
 
-#include <crypto++/modes.h>
-#include <crypto++/rsa.h>
-
 
 class RsaEncryptor : public RsaClass
 {
@@ -14,8 +11,8 @@ class RsaEncryptor : public RsaClass
         ~RsaEncryptor(); // деструктор
 
         void readKeyInFileForEncryptor(const std::string& filename); // чтение файла открытого ключа
-        void writeKeyInFileForEncryptor(CryptoPP::RSA::PublicKey m_PublicRsaKey, std::string& aesKeyString); // сохранение публичного ключа вместе с шифрованным ключом для AES
-        std::string rsaEncryptKey(std::string& aesKeyString); // шифрование ключа AES, получение зашифрованного ключа в виде строки
+		void writeKeyInFileForEncryptor(CryptoPP::RSA::PublicKey m_PublicRsaKey, const std::string& aesKeyString); // сохранение публичного ключа вместе с шифрованным ключом для AES
+		std::string rsaEncryptKey(const std::string& aesKeyString); // шифрование ключа AES, получение зашифрованного ключа в виде строки
         void savePrivateKey(CryptoPP::RSA::PrivateKey m_PrivateRsaKey); // сохранение приватного ключа в файл
 
     protected:

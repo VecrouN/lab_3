@@ -7,6 +7,7 @@
 #include "AesDecryptor.h"
 #include "AesEncryptor.h"
 #include "createNewKeys.h"
+
 #include "RsaDecryptor.h"
 #include "RsaEncryptor.h"
 
@@ -50,8 +51,8 @@ public:
 	void on_openPrivateRsaKeyFilePushButoon_clicked();
 
 	private: Ui::MainWindow *ui;
-	private:RsaDecryptor m_rsaDecryptor;
-	private:RsaEncryptor m_rsaEncryptor;
+	private:RsaDecryptor *m_rsaDecryptor;
+	private:RsaEncryptor *m_rsaEncryptor;
 	private:AesEncryptor *m_aesEncryptor;
 	private:AesDecryptor *m_aesDecryptor;
 	private:createNewKeys *m_Dialog;

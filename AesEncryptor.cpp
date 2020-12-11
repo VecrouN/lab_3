@@ -151,8 +151,6 @@ void AesEncryptor::writeFileForEncryption(const std::string& filePath, const std
 
 	outFile.open(outFilePath, std::ofstream::binary);
 
-	std::string test (CryptoPP::AES::BLOCKSIZE, 'A');
-
 
 	if(outFile.is_open())
 	{

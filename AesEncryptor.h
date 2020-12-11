@@ -2,8 +2,10 @@
 #define AESENCRYPTOR_H
 
 #include "Encryptor.h"
+
 #include "RsaEncryptor.h"
 #include "RsaDecryptor.h"
+
 
 #include <QMainWindow>
 #include <QMessageBox>
