@@ -29,7 +29,9 @@ RsaClass &RsaClass::operator=(const RsaClass &other_)
 
     if (this==&other_)
         return *this;
+
     else {
+
         if ((other_.m_PrivateRsaKey.GetPrime1() == m_PrivateRsaKey.GetPrime1()&&
                 other_.m_PrivateRsaKey.GetPrime2() == m_PrivateRsaKey.GetPrime2()&&
                 other_.m_PrivateRsaKey.GetPrivateExponent() == m_PrivateRsaKey.GetPrivateExponent())&&
@@ -95,9 +97,9 @@ void setPublicRsaKey(std::string publicRsaKeyString, CryptoPP::RSA::PublicKey m_
     m_PublicRsaKey.Load(sourse);
 }
 
-void setPrivateRsaKey(std::string privateRsaKeyString, CryptoPP::RSA::PublicKey m_PrivateRsaKey) {
+void setPrivateRsaKey(const std::string &privateRsaKeyString, CryptoPP::RSA::PublicKey m_PrivateRsaKey) {
 // метод принимает открытый ключ как строку, и записывает его в поле класса
 
-    CryptoPP::StringSource sourse(privateRsaKeyString,true);
+	CryptoPP::StringSource sourse(privateRsaKeyString, true);
     m_PrivateRsaKey.Load(sourse);
 }

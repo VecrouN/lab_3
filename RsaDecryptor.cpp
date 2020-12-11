@@ -68,7 +68,7 @@ std::string RsaDecryptor::readKeyInFileForDecryptor(const std::string &filename)
 
 }
 
-std::string RsaDecryptor::rsaDecryptKey(std::string& aesKeyStringForDescryptor)
+std::string RsaDecryptor::rsaDecryptKey(const std::string& aesKeyStringForDescryptor)
 {// расшифровка ключа
     CryptoPP::AutoSeededRandomPool rng;
     std::string decryptesText;
