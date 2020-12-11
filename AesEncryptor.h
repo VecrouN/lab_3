@@ -5,6 +5,8 @@
 #include "RsaEncryptor.h"
 #include "RsaDecryptor.h"
 
+#include <QMainWindow>
+#include <QMessageBox>
 #include <crypto++/aes.h>
 #include <crypto++/modes.h>
 #include <iostream>
@@ -16,6 +18,7 @@ class AesEncryptor : public Encryptor
 	 //    public     //
 	// ************* //
 	public: AesEncryptor();
+	public: AesEncryptor(QWidget *parent);
 	public: AesEncryptor(AesEncryptor& _other);
 	public: AesEncryptor& operator=(const AesEncryptor& _other);
 	public: ~AesEncryptor();
@@ -41,8 +44,10 @@ class AesEncryptor : public Encryptor
 	private: byte m_PrivateAesKey[ CryptoPP::AES::DEFAULT_KEYLENGTH ]; // ключ шифрования
 	private: byte m_PublicInitializationVector[ CryptoPP::AES::BLOCKSIZE ]; // вектор инициализации для шифровки 1ого блока, не скрывается
 	private: byte m_PrivateTmpArray[ CryptoPP::AES::BLOCKSIZE+CryptoPP::AES::DEFAULT_KEYLENGTH ]; // вектор инициализации для шифровки 1ого блока, не скрывается
-	private: bool m_isNewKey;
 
+	private: QWidget *m_parent;
+
+	private: bool m_isNewKey;
 	bool m_isKeyToEncryptReady;
 };
 

@@ -38,39 +38,7 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QGridLayout" name="gridLayout_3">
-    <item row="2" column="1">
-     <spacer name="bottomVerticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>500</width>
-        <height>5</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="1" column="2">
-     <spacer name="rightGorizontalSpacer">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>5</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
+   <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="1">
      <spacer name="topVerticalSpacer">
       <property name="orientation">
@@ -105,50 +73,24 @@
     </item>
     <item row="1" column="1">
      <layout class="QGridLayout" name="mainGridLayout">
+      <item row="3" column="0">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>5</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
       <item row="2" column="0">
        <layout class="QGridLayout" name="encryptGridLayout">
-        <item row="4" column="2">
-         <widget class="QPushButton" name="openPublicRsaKeyFilePushButton">
-          <property name="text">
-           <string>открыть ключ</string>
-          </property>
-         </widget>
-        </item>
-        <item row="9" column="0" colspan="3">
-         <widget class="QPushButton" name="createNewRsaKeysPushButton">
-          <property name="text">
-           <string>создать новую пару ключей</string>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="0" colspan="3">
-         <widget class="QLabel" name="keySectionLabel">
-          <property name="font">
-           <font>
-            <kerning>true</kerning>
-           </font>
-          </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
-          <property name="autoFillBackground">
-           <bool>false</bool>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">color: rgb(0, 0, 0);
-border-color: rgb(0, 0, 0);
-border-style: solid;
-border-width: 1px;
-border-color: black;</string>
-          </property>
-          <property name="text">
-           <string>работа с ключами</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
         <item row="2" column="0">
          <widget class="QLabel" name="fileToEncryptLabel">
           <property name="enabled">
@@ -166,29 +108,6 @@ border-color: black;</string>
           </property>
           <property name="text">
            <string>файл для шифровки</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0" colspan="3">
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>5</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="2" column="2">
-         <widget class="QPushButton" name="openFileToEncryptPushButton">
-          <property name="text">
-           <string>открыть файл</string>
           </property>
          </widget>
         </item>
@@ -212,22 +131,6 @@ border-color: black;</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="fileToEncryptLineEdit">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>25</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
         <item row="4" column="1">
          <widget class="QLineEdit" name="publicRsaKeyPathLineEdit">
           <property name="minimumSize">
@@ -244,6 +147,13 @@ border-color: black;</string>
           </property>
          </widget>
         </item>
+        <item row="4" column="2">
+         <widget class="QPushButton" name="openPublicRsaKeyFilePushButton">
+          <property name="text">
+           <string>открыть ключ</string>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="0" colspan="3">
          <widget class="QPushButton" name="pushButton">
           <property name="text">
@@ -251,9 +161,39 @@ border-color: black;</string>
           </property>
          </widget>
         </item>
+        <item row="2" column="2">
+         <widget class="QPushButton" name="openFileToEncryptPushButton">
+          <property name="text">
+           <string>открыть файл</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="fileToEncryptLineEdit">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0" colspan="3">
+         <widget class="QPushButton" name="createNewRsaKeysPushButton">
+          <property name="text">
+           <string>создать новую пару ключей</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
-      <item row="3" column="0">
+      <item row="4" column="0">
        <widget class="Line" name="line_2">
         <property name="minimumSize">
          <size>
@@ -262,36 +202,14 @@ border-color: black;</string>
          </size>
         </property>
         <property name="lineWidth">
-         <number>2</number>
+         <number>4</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="Line" name="line">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>100</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="lineWidth">
-         <number>2</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
+      <item row="6" column="0">
        <layout class="QGridLayout" name="decryptGridLayout">
         <item row="0" column="0" colspan="3">
          <widget class="QPushButton" name="pushButton_2">
@@ -427,7 +345,55 @@ border-color: black;</string>
         </item>
        </layout>
       </item>
+      <item row="5" column="0">
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>5</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
      </layout>
+    </item>
+    <item row="1" column="2">
+     <spacer name="rightGorizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>5</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="2" column="1">
+     <spacer name="bottomVerticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>500</width>
+        <height>5</height>
+       </size>
+      </property>
+     </spacer>
     </item>
    </layout>
   </widget>

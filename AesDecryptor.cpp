@@ -1,15 +1,31 @@
 #include "AesDecryptor.h"
+#include <iostream>
 
 AesDecryptor::AesDecryptor()
 {
 	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
 	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+
+	m_isKeyToDecryptReady = false;
+	m_parent = nullptr;
+}
+
+AesDecryptor::AesDecryptor(QWidget *_parent)
+{
+	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
+	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+
+	m_isKeyToDecryptReady = false;
+	m_parent = _parent;
 }
 
 AesDecryptor::AesDecryptor(AesDecryptor& _other)
 {
 	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
 	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+
+	m_isKeyToDecryptReady = _other.m_isKeyToDecryptReady;
+	m_parent = _other.m_parent;
 
 	for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
 	{
@@ -32,6 +48,9 @@ AesDecryptor& AesDecryptor::operator=(const AesDecryptor& _other)
 	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
 	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
 
+	m_isKeyToDecryptReady = _other.m_isKeyToDecryptReady;
+	m_parent = _other.m_parent;
+
 	for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
 	{
 		this->m_PrivateAesKey[i] = _other.m_PrivateAesKey[i];
@@ -51,12 +70,14 @@ AesDecryptor::~AesDecryptor()
 	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
 }
 
+
 void AesDecryptor::aesDecryptFile(const std::string& filePath)
 {
 	std::string encryptText = "";
 	std::string decrypTedtext = "";
 	readFileForDecryption(filePath, encryptText);
 
+	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH );
 
 	CryptoPP::AES::Decryption aesDecryption( this->m_PrivateAesKey , CryptoPP::AES::DEFAULT_KEYLENGTH);
 	CryptoPP::CBC_Mode_ExternalCipher::Decryption cbcDecryption( aesDecryption, this->m_PublicInitializationVector );
@@ -75,29 +96,28 @@ void AesDecryptor::aesDecryptFile(const std::string& filePath)
 void AesDecryptor::readFileForDecryption(const std::string& filePath, std::string& textForDecryption)
 {
 	std::ifstream readedFile;
-	readedFile.open(filePath);
+	readedFile >> std::noskipws;
+	readedFile.open(filePath, std::ifstream::binary);
+
 	std::string encryptedText = "";
 	std:: string tmpString = "";
-	memset( this->m_PublicInitializationVector, 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
 
 	if(readedFile.is_open())
 	{
-
-		getline(readedFile, tmpString);
+		char temp;
+		textForDecryption = "";
 		for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
 		{
-
-			this->m_PublicInitializationVector[i] = tmpString[i];
+			readedFile.read(&temp, sizeof(char));
+			m_PublicInitializationVector[i] = static_cast<byte>(temp);
 		}
-
-		while (getline(readedFile, tmpString))
+		while (readedFile.read(&temp, sizeof(char)))
 		{
-
-			encryptedText.append(tmpString+"\n");
+			textForDecryption.push_back(temp);
 		}
 	}
 	readedFile.close();
-	textForDecryption = encryptedText;
+
 
 	// ******************************* //
    //   конец readFileForDecryption   //
@@ -110,6 +130,7 @@ void AesDecryptor::writeFileForDecryption(const std::string& filePath, const std
 	std::ofstream outFile;
 
 	std::string outFilePath = filePath;
+	addDecryptToPath(outFilePath);
 
 	outFile.open(outFilePath);
 	if(outFile.is_open())
@@ -117,6 +138,9 @@ void AesDecryptor::writeFileForDecryption(const std::string& filePath, const std
 		outFile<<decryptedText;
 	}
 	outFile.close();
+	QMessageBox msgBox;
+	msgBox.setText("Дешифровано.");
+	msgBox.exec();
 
 
 	// ******************************** //
@@ -134,5 +158,24 @@ void AesDecryptor::addDecryptToPath(std::string& filePath)
 	name = "decrypted_" + name;
 	filePath = path+name;
 
+}
+
+void AesDecryptor::setNewPrivateAesKey(const byte _newPrivateAesKey[])
+{
+	for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
+	{
+		this->m_PrivateAesKey[i] = _newPrivateAesKey[i];
+	}
+}
+
+void AesDecryptor::setIsKeyToDecryptReady(bool _isKeyToEncryptReady)
+{
+	this->m_isKeyToDecryptReady = _isKeyToEncryptReady;
+
+}
+
+bool AesDecryptor::getIsKeyToDecryptReady()
+{
+	return m_isKeyToDecryptReady;
 }
 

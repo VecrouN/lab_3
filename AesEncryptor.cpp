@@ -8,6 +8,18 @@ AesEncryptor::AesEncryptor()
 	memset( m_PrivateTmpArray , 0x00, CryptoPP::AES::BLOCKSIZE+ CryptoPP::AES::DEFAULT_KEYLENGTH);
 	m_isNewKey = false;
 	m_isKeyToEncryptReady = false;
+	m_parent = nullptr;
+}
+
+
+AesEncryptor::AesEncryptor(QWidget *parent)
+{
+	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
+	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+	memset( m_PrivateTmpArray , 0x00, CryptoPP::AES::BLOCKSIZE+ CryptoPP::AES::DEFAULT_KEYLENGTH);
+	m_isNewKey = false;
+	m_isKeyToEncryptReady = false;
+	m_parent = parent;
 }
 
 AesEncryptor::AesEncryptor(AesEncryptor& _other)
@@ -19,6 +31,7 @@ AesEncryptor::AesEncryptor(AesEncryptor& _other)
 	this->setNewInitializationVector(_other.m_PublicInitializationVector);
 	this->m_isNewKey = _other.m_isNewKey;
 	m_isKeyToEncryptReady = _other.m_isKeyToEncryptReady;
+	m_parent = _other.m_parent;
 }
 
 AesEncryptor& AesEncryptor::operator=(const AesEncryptor& _other)
@@ -36,6 +49,7 @@ AesEncryptor& AesEncryptor::operator=(const AesEncryptor& _other)
 	this->setNewInitializationVector(_other.m_PublicInitializationVector);
 	this->m_isNewKey = _other.m_isNewKey;
 	m_isKeyToEncryptReady = _other.m_isKeyToEncryptReady;
+	m_parent = _other.m_parent;
 
 	return *this;
 }
@@ -57,6 +71,12 @@ void AesEncryptor::aesEncryptFile(const std::string& filePath)
 	this->readFileForEncryption(filePath, textForEncryption);
 
 
+
+	memset(m_PrivateAesKey, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH);
+
+
+
+
 	CryptoPP::AES::Encryption aesEncryption(m_PrivateAesKey, CryptoPP::AES::DEFAULT_KEYLENGTH); // шифр
 	CryptoPP::CBC_Mode_ExternalCipher::Encryption cbcEncryption( aesEncryption, m_PublicInitializationVector ); // режим работы cbc
 
@@ -66,6 +86,10 @@ void AesEncryptor::aesEncryptFile(const std::string& filePath)
 	stfEncryptor.MessageEnd();
 
 	writeFileForEncryption(filePath, encryptedText);
+
+	QMessageBox msgBox;
+	msgBox.setText("Зашифровано.");
+	msgBox.exec();
 
 	// ************************ //
    //   конец aesEncryptFile   //
@@ -82,6 +106,7 @@ void AesEncryptor::createNewPublicInitializationVector(byte (&changedPublicIniti
 	char tmpChar;
 	srand(static_cast<unsigned int>(time(0))); //  сид для случайного числа
 	memset( changedPublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE );
+
 	for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
 	{
 		do
@@ -104,7 +129,7 @@ void AesEncryptor::readFileForEncryption(const std::string& filePath, std::strin
 	fileToRead.open(filePath);
 	if(fileToRead.is_open())
 	{
-		textForEncryption = "";
+		textForEncryption.clear();
 		while (getline(fileToRead, tmpString))
 		{
 			textForEncryption.append(tmpString+"\n");
@@ -124,17 +149,28 @@ void AesEncryptor::writeFileForEncryption(const std::string& filePath, const std
 	std::string outFilePath = filePath;
 	addEncryptToPath(outFilePath);
 
-	outFile.open(outFilePath);
+	outFile.open(outFilePath, std::ofstream::binary);
+
+	std::string test (CryptoPP::AES::BLOCKSIZE, 'A');
+
+
 	if(outFile.is_open())
 	{
-		outFile<<this->m_PublicInitializationVector<<"\n";
-		outFile<<encryptedText;
+		size_t size=encryptedText.size();
+		std::string buffString = "";
+		for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
+		{
+			buffString.push_back(static_cast<char>(m_PublicInitializationVector[i]));
+		}
+		outFile.write(buffString.c_str(), buffString.size());
+		outFile.write(encryptedText.c_str(),size);
+
 	}
 	outFile.close();
 
 
-	// ******************************* //
-   //   конец writeFileForEncryption  //
+	  // ******************************* //
+	 //   конец writeFileForEncryption  //
 	// ******************************* //
 }
 
@@ -145,7 +181,7 @@ void AesEncryptor::addEncryptToPath(std::string& filePath)
 	++i;
 	std::string path = filePath.substr(0, i);
 	std::string name = filePath.substr(i, filePath.length()-1);
-	name = "encrypted_" + name;
+	name = "encrypted_" + name + ".dat";
 	filePath = path+name;
 }
 

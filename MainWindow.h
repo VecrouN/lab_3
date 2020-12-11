@@ -24,6 +24,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 	AesEncryptor *getAesEncryptor();
+	AesDecryptor *getAesDecryptor();
 	//void setNewIV_PublicKey();
 
 	protected: int readyIndex;
@@ -44,18 +45,23 @@ public:
 	void setNewIV_PublicKey();
 
 
+	void on_openFileToDecryptPushButoon_clicked();
+
+	void on_openPrivateRsaKeyFilePushButoon_clicked();
+
 	private: Ui::MainWindow *ui;
 	private:RsaDecryptor m_rsaDecryptor;
 	private:RsaEncryptor m_rsaEncryptor;
-	private:AesDecryptor m_aesDecryptor;
 	private:AesEncryptor *m_aesEncryptor;
+	private:AesDecryptor *m_aesDecryptor;
 	private:createNewKeys *m_Dialog;
 	std::string m_filePathToEncrypt;
+	std::string m_filePathToDecrypt;
 	byte m_TmpByteArray[ CryptoPP::AES::DEFAULT_KEYLENGTH + CryptoPP::AES::BLOCKSIZE];
 	byte * ptrPrivateAesKey;
 
 	bool m_isTextToEncryptReady;
 	bool m_isTextToDecryptReady;
-	bool m_isKeyToDecryptReady;
+
 };
 #endif // MAINWINDOW_H

@@ -5,7 +5,7 @@ PaintScene::PaintScene(byte *_array, int *readyIndex, QObject *parent) : QGraphi
 	//m_readyIndex = 0;
 	m_array = _array;
 	m_readyIndex = readyIndex;
-	m_step = 5;
+	m_step = 1;
 	m_indexStep = 0;
 }
 

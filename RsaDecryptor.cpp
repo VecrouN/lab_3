@@ -1,6 +1,5 @@
 #include "RsaDecryptor.h"
 
-
 #include <iostream>
 #include <fstream>
 #include <crypto++/modes.h>
