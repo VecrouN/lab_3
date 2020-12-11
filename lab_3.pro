@@ -14,6 +14,7 @@ SOURCES += \
     Cryptor.cpp \
     Decryptor.cpp \
     Encryptor.cpp \
+    RsaClass.cpp \
     RsaDecryptor.cpp \
     RsaEncryptor.cpp \
     createNewKeys.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     MainWindow.h \
     PaintScene.h \
     RsaDecryptor.h \
+    RsaClass.h \
     RsaEncryptor.h \
     createNewKeys.h
 
