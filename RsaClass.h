@@ -13,7 +13,7 @@ class RsaClass
 public:
     RsaClass();// конструктор
     RsaClass(RsaClass& other_); // конструктор копирования
-    RsaClass& operator=(const RsaClass& other_);// перегрузка оператора копирования
+    RsaClass& operator=(RsaClass& other_);// перегрузка оператора копирования
     ~RsaClass(); // деструктор
 
     void rsaGenerateKey(); // генерация ключей
