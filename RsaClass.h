@@ -31,6 +31,14 @@ public:
 
     // функция, которая устанавливает поле закрытого ключа
     void setPrivateRsaKey(std::string privateRsaKeyString,CryptoPP::RSA::PublicKey m_PrivateRsaKey);
+    
+    void savePublicKey(const std::string& filename, CryptoPP::RSA::PublicKey m_PublicRsaKey);
+    void savePrivateKey(const std::string& filename, CryptoPP::RSA::PrivateKey m_PrivateRsaKey);
+
+    void LoadPublicKey(const std::string& filename,CryptoPP::RSA::PublicKey& m_PublicRsaKey);
+    void LoadPrivateKey(const std::string& filename,CryptoPP::RSA::PrivateKey& m_PrivateRsaKey);
+
+
 
   protected:
       CryptoPP::RSA::PublicKey m_PublicRsaKey; // открытый ключ шифрования
