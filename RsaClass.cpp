@@ -1,4 +1,4 @@
-#include "rsaclass.h"
+#include "RsaClass.h"
 
 #include <iostream>
 #include <fstream>
@@ -44,23 +44,22 @@ RsaClass &RsaClass::operator=(RsaClass &other_)
 RsaClass::~RsaClass()
 { // деструктор
 
-    this->m_PublicRsaKey.~RSAFunction();
-    this->m_PrivateRsaKey.~InvertibleRSAFunction();
 
 }
 
-void RsaClass::rsaGenerateKey()
+void RsaClass::rsaGenerateKey(const std::string& dirPath)
 { //генерация ключей
     CryptoPP::AutoSeededRandomPool rnd;
     CryptoPP::InvertibleRSAFunction parameters;
 
     parameters.GenerateRandomWithKeySize (rnd, 2048);
 
-    CryptoPP::RSA::PublicKey m_PublicRsaKey(parameters);
-    CryptoPP::RSA::PrivateKey m_PrivateRsaKey(parameters);
+	CryptoPP::RSA::PublicKey m_PublicRsaKey(parameters);
+	CryptoPP::RSA::PrivateKey m_PrivateRsaKey(parameters);
 
-    savePrivateKey("rsaPrivateKey.key");
-    savePublicKey("rsaPublicKey.key");
+
+	savePrivateKey(dirPath);
+	savePublicKey(dirPath);
 }
 
 CryptoPP::RSA::PublicKey RsaClass::getPublicRsaKey() const {
@@ -105,9 +104,13 @@ void RsaClass::savePrivateKey(const std::string &filename)
     CryptoPP::ByteQueue queue;
     this->m_PrivateRsaKey.Save(queue);
 
-    CryptoPP::FileSink file(filename.c_str());
+	// directoryPath = usr/dir/+ "privateKey.key"
+	CryptoPP::FileSink file((filename + "/privateKey.key").c_str());
+
+
 
     queue.CopyTo(file);
+
 }
 
 void RsaClass::savePublicKey(const std::string &filename)
@@ -115,7 +118,7 @@ void RsaClass::savePublicKey(const std::string &filename)
     CryptoPP::ByteQueue queue;
     this->m_PublicRsaKey.Save(queue);
 
-    CryptoPP::FileSink file(filename.c_str());
+	CryptoPP::FileSink file((filename + "/publicKey.key").c_str());
 
     queue.CopyTo(file);
 }

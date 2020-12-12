@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "rsaclass.h"
+#include "RsaClass.h"
 
 #include <crypto++/modes.h>
 #include <crypto++/rsa.h>
@@ -17,7 +17,7 @@ class RsaEncryptor : public RsaClass
         ~RsaEncryptor(); // деструктор
 
         // шифрование ключа AES, получение зашифрованного ключа в виде строки
-        std::string rsaEncryptKey(std::string& aesKeyString);
+		std::string rsaEncryptKey(const std::string& aesKeyString);
 
     protected:
 

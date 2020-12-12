@@ -19,22 +19,13 @@ RsaDecryptor::~RsaDecryptor() {
 std::string RsaDecryptor::rsaDecryptKey(const std::string& aesKeyStringForDescryptor)
 {// расшифровка ключа
     CryptoPP::AutoSeededRandomPool rng;
-    std::string decryptesText;
-
-    CryptoPP::byte tmpArray[CryptoPP::AES::DEFAULT_KEYLENGTH];
-    memset(tmpArray, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH);
-    for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
-    {
-        tmpArray[i] = static_cast<CryptoPP::byte>(aesKeyStringForDescryptor[i]);
-    }
-
-    LoadPublicKey("publicKey.key");
-    LoadPrivateKey("privateKey.key");
-
+	std::string decryptesText;
+	decryptesText.resize(aesKeyStringForDescryptor.size(), 'a');
     CryptoPP::RSAES_OAEP_SHA_Decryptor d(m_PrivateRsaKey);
 
-    CryptoPP::StringSource(aesKeyStringForDescryptor, true,
-                           new CryptoPP::PK_DecryptorFilter(rng, d,new CryptoPP::StringSink(decryptesText)));
+	CryptoPP::PK_DecryptorFilter *der = new CryptoPP::PK_DecryptorFilter(rng, d,new CryptoPP::StringSink( decryptesText));
+
+	CryptoPP::ArraySource test = new CryptoPP::ArraySource(aesKeyStringForDescryptor, true,der);
 
     return decryptesText;
 }

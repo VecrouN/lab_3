@@ -114,12 +114,12 @@ void AesDecryptor::readFileForDecryption(const std::string& filePath, std::strin
 			readedFile.read(&temp, sizeof(char));
 			encryptedKey.push_back(temp);
 		}
-
-		encryptedKey = this->m_rsaDecryptor->rsaDecryptKey(encryptedKey);
-
+		;
+		std::string encryptedKey1 = this->m_rsaDecryptor->rsaDecryptKey(encryptedKey);
+	;
 		for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH;++i)
 		{
-			tmpArray[i] = encryptedKey[i];
+			tmpArray[i] = encryptedKey1[i];
 		}
 		this->setNewPrivateAesKey(tmpArray);
 

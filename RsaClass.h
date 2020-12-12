@@ -14,7 +14,7 @@ public:
     RsaClass& operator=(RsaClass& other_);// перегрузка оператора копирования
     ~RsaClass(); // деструктор
 
-    void rsaGenerateKey(); // генерация ключей
+	void rsaGenerateKey(const std::string& dirPath); // генерация ключей
     CryptoPP::RSA::PublicKey getPublicRsaKey() const; // получение значения поля открытого ключа
     CryptoPP::RSA::PrivateKey getPrivateRsaKey() const; // получение значения из поля закрытого ключа
 
