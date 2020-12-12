@@ -101,3 +101,42 @@ void setPrivateRsaKey(std::string privateRsaKeyString, CryptoPP::RSA::PublicKey 
     CryptoPP::StringSource sourse(privateRsaKeyString,true);
     m_PrivateRsaKey.Load(sourse);
 }
+
+
+void RsaClass::savePrivateKey(const std::string &filename, CryptoPP::RSA::PrivateKey m_PrivateRsaKey)
+{ // сохранение приватного ключа в файл
+    CryptoPP::ByteQueue queue;
+    m_PrivateRsaKey.Save(queue);
+
+    CryptoPP::FileSink file(filename.c_str());
+
+    queue.CopyTo(file);
+}
+
+void RsaClass::savePublicKey(const std::string &filename, CryptoPP::RSA::PublicKey m_PublicRsaKey)
+{// сохранение открытого ключа в файл
+    CryptoPP::ByteQueue queue;
+    m_PublicRsaKey.Save(queue);
+
+    CryptoPP::FileSink file(filename.c_str());
+
+    queue.CopyTo(file);
+}
+
+void RsaClass::LoadPublicKey(const std::string &filename, CryptoPP::RSA::PublicKey &m_PublicRsaKey)
+{ // извлечение открытого ключа из файла
+    CryptoPP::ByteQueue queue;
+    CryptoPP::FileSource file(filename.c_str(), true);
+    file.TransferTo(queue);
+
+    m_PublicRsaKey.Load(queue);
+}
+
+void RsaClass::LoadPrivateKey(const std::string &filename, CryptoPP::RSA::PrivateKey &m_PrivateRsaKey)
+{ // извлечение закрытого ключа из файла
+    CryptoPP::ByteQueue queue;
+    CryptoPP::FileSource file(filename.c_str(), true);
+    file.TransferTo(queue);
+
+    m_PrivateRsaKey.Load(queue);
+}
