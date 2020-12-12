@@ -83,7 +83,7 @@ std::string RsaClass::getStringPublicRsaKey(CryptoPP::RSA::PublicKey m_PublicRsa
     return publicRsaKeyString;
 }
 
-std::string RsaClass::getStringRsaPrivateKey(CryptoPP::RSA::PublicKey m_PrivateRsaKey) const {
+std::string RsaClass::getStringRsaPrivateKey(CryptoPP::RSA::PrivateKey m_PrivateRsaKey) const {
 // метод принимает закрытый ключ в стандартном формате, возвращает его в виде строки
       
     std::string privateRsaKeyString;
@@ -101,8 +101,8 @@ void RsaClass::setPublicRsaKey(std::string publicRsaKeyString, CryptoPP::RSA::Pu
     m_PublicRsaKey.Load(sourse);
 }
 
-void RsaClass::setPrivateRsaKey(const std::string &privateRsaKeyString, CryptoPP::RSA::PublicKey m_PrivateRsaKey) {
-// метод принимает открытый ключ как строку, и записывает его в поле класса
+void RsaClass::setPrivateRsaKey(const std::string &privateRsaKeyString, CryptoPP::RSA::PrivateKey m_PrivateRsaKey) {
+// метод принимает закрытый ключ как строку, и записывает его в поле класса
 
 	CryptoPP::StringSource sourse(privateRsaKeyString, true);
 	m_PrivateRsaKey.Load(sourse);
