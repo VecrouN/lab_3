@@ -58,10 +58,11 @@ std::string RsaDecryptor::rsaDecryptKey(const std::string& aesKeyStringForDescry
 		tmpArray[i] = static_cast<byte>(aesKeyStringForDescryptor[i]);
 	}
 
-	//CryptoPP::RSAES_OAEP_SHA_Decryptor e(*m_PublicRsaKey);
+
+	//CryptoPP::RSAES_OAEP_SHA_Decryptor d(*m_PublicRsaKey);
 	CryptoPP::RSAES_OAEP_SHA_Decryptor d(m_PrivateRsaKey);
-	CryptoPP::ArraySource(aesKeyStringForDescryptor, true,
-						   new CryptoPP::PK_DecryptorFilter(rng,d,new CryptoPP::StringSink(decryptesText)));
-	return decryptesText;
+    CryptoPP::StringSource(aesKeyStringForDescryptor, true,
+                           new CryptoPP::PK_DecryptorFilter(rng, d, new CryptoPP::StringSink(decryptesText)));
+    return decryptesText;
 
 }
