@@ -110,7 +110,7 @@ void AesDecryptor::readFileForDecryption(const std::string& filePath, std::strin
 		for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
 		{
 			readedFile.read(&temp, sizeof(char));
-			encryptedKey.push_back(static_cast<byte>(temp));
+			encryptedKey.push_back(temp);
 		}
 
 		encryptedKey = this->m_rsaDecryptor->rsaDecryptKey(encryptedKey);

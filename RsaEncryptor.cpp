@@ -4,6 +4,9 @@
 #include <fstream>
 #include <crypto++/osrng.h>
 #include <crypto++/aes.h>
+#include <cryptopp/files.h>
+
+
 
 #include "RsaEncryptor.h"
 
@@ -40,14 +43,17 @@ void RsaEncryptor::readPublicKey(const std::string& filename)
 
 	readedFile.close();
 
-	this->setPublicRsaKey(tmpString, *this->m_PublicRsaKey);
+	//this->setPublicRsaKey(tmpString, *this->m_PublicRsaKey);
+	this->setPublicRsaKey(tmpString, this->m_PublicRsaKey);
 
 
 }
 
 void RsaEncryptor::savePublicKey(const std::string &filePath)
 {//сохранение публичного ключа
-	std::string PublicKeyString = getStringPublicRsaKey(*this->m_PublicRsaKey); //сохранение ключа в строку
+
+	//std::string PublicKeyString = getStringPublicRsaKey(*this->m_PublicRsaKey); //сохранение ключа в строку
+	std::string PublicKeyString = getStringPublicRsaKey(this->m_PublicRsaKey); //сохранение ключа в строку
     
 	std::ofstream outFile;
 	outFile.open(filePath+"/publicRsaKey.dat", std::ofstream::binary);
@@ -57,6 +63,7 @@ void RsaEncryptor::savePublicKey(const std::string &filePath)
 		outFile.write(PublicKeyString.c_str(), PublicKeyString.size());
 	}
 	outFile.close();
+
 }
 
 std::string RsaEncryptor::rsaEncryptKey(const std::string& aesKeyString)
@@ -66,7 +73,8 @@ std::string RsaEncryptor::rsaEncryptKey(const std::string& aesKeyString)
     
 	//rsaGenerateKey();
 
-	CryptoPP::RSAES_OAEP_SHA_Encryptor e(*this->m_PublicRsaKey);
+	//CryptoPP::RSAES_OAEP_SHA_Encryptor e(*this->m_PublicRsaKey);
+	CryptoPP::RSAES_OAEP_SHA_Encryptor e(this->m_PublicRsaKey);
     CryptoPP::StringSource(aesKeyString, true,
 						   new CryptoPP::PK_EncryptorFilter(rng, e, new CryptoPP::StringSink(encryptesText)));
 
@@ -78,7 +86,9 @@ std::string RsaEncryptor::rsaEncryptKey(const std::string& aesKeyString)
 void RsaEncryptor::savePrivateKey(const std::string &filePath)
 {//сохранение приватного ключа
 
-	std::string PrivateKeyString = getStringRsaPrivateKey(*this->m_PrivateRsaKey); //сохранение ключа в строку
+
+	std::string PrivateKeyString = getStringRsaPrivateKey(this->m_PrivateRsaKey); //сохранение ключа в строку
+	//std::string PrivateKeyString = getStringRsaPrivateKey(*this->m_PrivateRsaKey); //сохранение ключа в строку
 
 	std::ofstream outFile;
 	outFile.open(filePath + "/privateRsaKey.dat", std::ofstream::binary);
@@ -88,5 +98,7 @@ void RsaEncryptor::savePrivateKey(const std::string &filePath)
 		outFile.write(PrivateKeyString.c_str(), PrivateKeyString.size());
 	}
 	outFile.close();
-	setPrivateRsaKey(PrivateKeyString, *m_PrivateRsaKey); // Из полученной строки записываем в поле закрытый ключ
+	setPrivateRsaKey(PrivateKeyString, m_PrivateRsaKey); // Из полученной строки записываем в поле закрытый ключ
+	//setPrivateRsaKey(PrivateKeyString, *m_PrivateRsaKey); // Из полученной строки записываем в поле закрытый ключ
+
 }

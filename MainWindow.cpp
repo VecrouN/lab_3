@@ -213,6 +213,6 @@ void MainWindow::on_openPrivateRsaKeyFilePushButoon_clicked() // открыть 
 		for(i = pathToPrivateKey.length(); i > 0 && pathToPrivateKey[i] != '/'; --i);
 		++i;
 
-		this->ui->pathFileToDecryptLineEdit->setText(QString::fromStdString(pathToPrivateKey.substr(i, pathToPrivateKey.length()-1)));
+		this->ui->pathFileToPrivateRsaKeyLineEdit->setText(QString::fromStdString(pathToPrivateKey.substr(i, pathToPrivateKey.length()-1)));
 	}
 }

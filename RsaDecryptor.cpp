@@ -6,6 +6,7 @@
 #include <crypto++/rsa.h>
 #include <crypto++/osrng.h>
 #include <crypto++/aes.h>
+#include <cryptopp/files.h>
 
 RsaDecryptor::RsaDecryptor():RsaClass() {
 
@@ -23,7 +24,6 @@ RsaDecryptor::~RsaDecryptor()
 void RsaDecryptor::readPrivateKey(const std::string &filename)
 {// чтение файла с приватным ключом
 
-
 	std::ifstream readedFile;
 	readedFile >> std::noskipws;
 	readedFile.open(filename, std::ifstream::binary);
@@ -40,7 +40,10 @@ void RsaDecryptor::readPrivateKey(const std::string &filename)
 	}
 	readedFile.close();
 	// Из строки получаем закрытый ключ и записываем в соответствующее поле класса
-	this->setPrivateRsaKey(tmpString, *this->m_PrivateRsaKey);
+	//this->m_PrivateRsaKey = nullptr;
+	this->setPrivateRsaKey(tmpString, this->m_PrivateRsaKey);
+	//this->setPrivateRsaKey(tmpString, *this->m_PrivateRsaKey);
+
 
 }
 
@@ -49,7 +52,8 @@ std::string RsaDecryptor::rsaDecryptKey(const std::string& aesKeyStringForDescry
     CryptoPP::AutoSeededRandomPool rng;
     std::string decryptesText;
 
-	CryptoPP::RSAES_OAEP_SHA_Decryptor e(*m_PublicRsaKey);
+	//CryptoPP::RSAES_OAEP_SHA_Decryptor e(*m_PublicRsaKey);
+	CryptoPP::RSAES_OAEP_SHA_Decryptor e(m_PrivateRsaKey);
     CryptoPP::StringSource(aesKeyStringForDescryptor, true,
                            new CryptoPP::PK_DecryptorFilter(rng,e,new CryptoPP::StringSink(decryptesText)));
     return decryptesText;
