@@ -151,6 +151,8 @@ void AesEncryptor::writeFileForEncryption(const std::string& filePath, const std
 		{
 			buffString.push_back(static_cast<char>(m_PublicInitializationVector[i]));
 		}
+		int encryptedLength = m_encryptedAesKey.size();
+		outFile.write((char*)&encryptedLength, sizeof(int));
 		outFile.write(this->m_encryptedAesKey.c_str(), this->m_encryptedAesKey.size());
 		outFile.write(buffString.c_str(), buffString.size());
 		outFile.write(encryptedText.c_str(),size);

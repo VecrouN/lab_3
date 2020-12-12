@@ -107,7 +107,9 @@ void AesDecryptor::readFileForDecryption(const std::string& filePath, std::strin
 	{
 		char temp;
 		textForDecryption = "";
-		for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
+		int length = 0;
+		readedFile.read((char*)&length, sizeof(int));
+		for(int i = 0; i < length; ++i)
 		{
 			readedFile.read(&temp, sizeof(char));
 			encryptedKey.push_back(temp);

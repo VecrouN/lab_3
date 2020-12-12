@@ -27,10 +27,10 @@ public:
 	std::string getStringRsaPrivateKey(CryptoPP::RSA::PrivateKey m_PrivateRsaKey) const;
 
     // функция, которая устанавливает поле открытого ключа
-	void setPublicRsaKey(std::string publicRsaKeyString, CryptoPP::RSA::PublicKey m_PublicRsaKey);
+	void setPublicRsaKey(std::string publicRsaKeyString);
 
     // функция, которая устанавливает поле закрытого ключа
-	void setPrivateRsaKey(const std::string &privateRsaKeyString, CryptoPP::RSA::PrivateKey m_PrivateRsaKey);
+	void setPrivateRsaKey(const std::string &privateRsaKeyString);
 
   protected:
 	  //CryptoPP::RSA::PublicKey *m_PublicRsaKey = nullptr; // открытый ключ шифрования

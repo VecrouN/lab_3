@@ -76,10 +76,12 @@ void MainWindow::on_createNewRsaKeysPushButton_clicked()
 
 		this->m_rsaEncryptor->rsaGenerateKey();
 		this->m_aesEncryptor->setIsKeyToEncryptReady(true);
+		this->m_aesDecryptor->setIsKeyToDecryptReady(true);
 		this->m_rsaEncryptor->savePrivateKey(directoryPath);
 		this->m_rsaEncryptor->savePublicKey(directoryPath);
 
 		this->ui->publicRsaKeyPathLineEdit->setText("publicRsaKey.dat");
+		this->ui->pathFileToPrivateRsaKeyLineEdit->setText("privateRsaKey.dat");
 		QMessageBox msgBox;
 		msgBox.setText("Ключи созданы");
 		msgBox.exec();
@@ -172,7 +174,7 @@ void MainWindow::on_openPublicRsaKeyFilePushButton_clicked() //кнопка от
 		for(i = pathToPublicKey.length(); i > 0 && pathToPublicKey[i] != '/'; --i);
 		++i;
 
-		this->ui->fileToEncryptLineEdit->setText(QString::fromStdString(pathToPublicKey.substr(i, pathToPublicKey.length()-1)));
+		this->ui->publicRsaKeyPathLineEdit->setText(QString::fromStdString(pathToPublicKey.substr(i, pathToPublicKey.length()-1)));
 	}
 }
 

@@ -41,7 +41,7 @@ void RsaDecryptor::readPrivateKey(const std::string &filename)
 	readedFile.close();
 	// Из строки получаем закрытый ключ и записываем в соответствующее поле класса
 	//this->m_PrivateRsaKey = nullptr;
-	this->setPrivateRsaKey(tmpString, this->m_PrivateRsaKey);
+	this->setPrivateRsaKey(tmpString);
 	//this->setPrivateRsaKey(tmpString, *this->m_PrivateRsaKey);
 
 
@@ -51,11 +51,17 @@ std::string RsaDecryptor::rsaDecryptKey(const std::string& aesKeyStringForDescry
 {// расшифровка ключа
     CryptoPP::AutoSeededRandomPool rng;
     std::string decryptesText;
+	byte tmpArray[CryptoPP::AES::DEFAULT_KEYLENGTH];
+	memset(tmpArray, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH);
+	for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
+	{
+		tmpArray[i] = static_cast<byte>(aesKeyStringForDescryptor[i]);
+	}
 
 	//CryptoPP::RSAES_OAEP_SHA_Decryptor e(*m_PublicRsaKey);
-	CryptoPP::RSAES_OAEP_SHA_Decryptor e(m_PrivateRsaKey);
-    CryptoPP::StringSource(aesKeyStringForDescryptor, true,
-                           new CryptoPP::PK_DecryptorFilter(rng,e,new CryptoPP::StringSink(decryptesText)));
-    return decryptesText;
+	CryptoPP::RSAES_OAEP_SHA_Decryptor d(m_PrivateRsaKey);
+	CryptoPP::ArraySource(aesKeyStringForDescryptor, true,
+						   new CryptoPP::PK_DecryptorFilter(rng,d,new CryptoPP::StringSink(decryptesText)));
+	return decryptesText;
 
 }
