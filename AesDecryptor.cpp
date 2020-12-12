@@ -77,8 +77,6 @@ void AesDecryptor::aesDecryptFile(const std::string& filePath)
 	std::string decrypTedtext = "";
 	readFileForDecryption(filePath, encryptText);
 
-	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH );
-
 	CryptoPP::AES::Decryption aesDecryption( this->m_PrivateAesKey , CryptoPP::AES::DEFAULT_KEYLENGTH);
 	CryptoPP::CBC_Mode_ExternalCipher::Decryption cbcDecryption( aesDecryption, this->m_PublicInitializationVector );
 
@@ -100,12 +98,29 @@ void AesDecryptor::readFileForDecryption(const std::string& filePath, std::strin
 	readedFile.open(filePath, std::ifstream::binary);
 
 	std::string encryptedText = "";
-	std:: string tmpString = "";
+	std::string tmpString = "";
+	std::string encryptedKey = "";
+	byte tmpArray[CryptoPP::AES::DEFAULT_KEYLENGTH];
+	memset(tmpArray, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH);
 
 	if(readedFile.is_open())
 	{
 		char temp;
 		textForDecryption = "";
+		for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
+		{
+			readedFile.read(&temp, sizeof(char));
+			encryptedKey.push_back(static_cast<byte>(temp));
+		}
+
+		encryptedKey = this->m_rsaDecryptor->rsaDecryptKey(encryptedKey);
+
+		for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH;++i)
+		{
+			tmpArray[i] = encryptedKey[i];
+		}
+		this->setNewPrivateAesKey(tmpArray);
+
 		for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
 		{
 			readedFile.read(&temp, sizeof(char));
@@ -166,6 +181,11 @@ void AesDecryptor::setNewPrivateAesKey(const byte _newPrivateAesKey[])
 	{
 		this->m_PrivateAesKey[i] = _newPrivateAesKey[i];
 	}
+}
+
+void AesDecryptor::setRsaDecryptor(RsaDecryptor* _rsaDecryptor)
+{
+	this->m_rsaDecryptor = _rsaDecryptor;
 }
 
 void AesDecryptor::setIsKeyToDecryptReady(bool _isKeyToEncryptReady)

@@ -11,7 +11,6 @@ public:
     ~RsaDecryptor(); // деструктор
 
 	void readPrivateKey(const std::string& filename); // чтение файла с закрытым ключом RSA
-	std::string readKeyInFileForDecryptor(const std::string& filename); // чтение публичного ключа вместе с шифрованным ключом для AES
 	std::string rsaDecryptKey(const std::string& aesKeyStringForDescryptor); // расшифровка ключа AES, получение зашифрованного ключа в виде строки
 
 protected:

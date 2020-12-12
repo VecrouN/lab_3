@@ -29,7 +29,7 @@ public:
 	//void setNewIV_PublicKey();
 
 	protected: int readyIndex;
-	protected: int *ptrReadyIndex;
+	protected: int *ptrReadyIndex = nullptr;
 
 	private slots:
 
@@ -60,6 +60,7 @@ public:
 	std::string m_filePathToDecrypt;
 	byte m_TmpByteArray[ CryptoPP::AES::DEFAULT_KEYLENGTH + CryptoPP::AES::BLOCKSIZE];
 	byte * ptrPrivateAesKey;
+	std::string m_filePath = "";
 
 	bool m_isTextToEncryptReady;
 	bool m_isTextToDecryptReady;

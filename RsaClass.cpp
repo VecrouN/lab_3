@@ -17,11 +17,11 @@ RsaClass::RsaClass()
 // конструктор копирования
 RsaClass::RsaClass(RsaClass &other_) {
 	
-    this->m_PrivateRsaKey.SetPrime1(other_.m_PrivateRsaKey.GetPrime1());
-    this->m_PrivateRsaKey.SetPrime2(other_.m_PrivateRsaKey.GetPrime2());
-    this->m_PrivateRsaKey.SetPrivateExponent(other_.m_PrivateRsaKey.GetPrivateExponent());
-    this->m_PublicRsaKey.SetPublicExponent(other_.m_PublicRsaKey.GetPublicExponent());
-    this->m_PublicRsaKey.SetModulus(other_.m_PublicRsaKey.GetModulus());
+	this->m_PrivateRsaKey->SetPrime1(other_.m_PrivateRsaKey->GetPrime1());
+	this->m_PrivateRsaKey->SetPrime2(other_.m_PrivateRsaKey->GetPrime2());
+	this->m_PrivateRsaKey->SetPrivateExponent(other_.m_PrivateRsaKey->GetPrivateExponent());
+	this->m_PublicRsaKey->SetPublicExponent(other_.m_PublicRsaKey->GetPublicExponent());
+	this->m_PublicRsaKey->SetModulus(other_.m_PublicRsaKey->GetModulus());
 }
 
 RsaClass &RsaClass::operator=(const RsaClass &other_)
@@ -30,11 +30,11 @@ RsaClass &RsaClass::operator=(const RsaClass &other_)
     if (this==&other_)
         return *this;
     else {
-    	this->m_PrivateRsaKey.SetPrime1(other_.m_PrivateRsaKey.GetPrime1());
-    	this->m_PrivateRsaKey.SetPrime2(other_.m_PrivateRsaKey.GetPrime2());
-    	this->m_PrivateRsaKey.SetPrivateExponent(other_.m_PrivateRsaKey.GetPrivateExponent());
-    	this->m_PublicRsaKey.SetPublicExponent(other_.m_PublicRsaKey.GetPublicExponent());
-    	this->m_PublicRsaKey.SetModulus(other_.m_PublicRsaKey.GetModulus());
+		this->m_PrivateRsaKey->SetPrime1(other_.m_PrivateRsaKey->GetPrime1());
+		this->m_PrivateRsaKey->SetPrime2(other_.m_PrivateRsaKey->GetPrime2());
+		this->m_PrivateRsaKey->SetPrivateExponent(other_.m_PrivateRsaKey->GetPrivateExponent());
+		this->m_PublicRsaKey->SetPublicExponent(other_.m_PublicRsaKey->GetPublicExponent());
+		this->m_PublicRsaKey->SetModulus(other_.m_PublicRsaKey->GetModulus());
         return *this;
     }
 }
@@ -42,8 +42,12 @@ RsaClass &RsaClass::operator=(const RsaClass &other_)
 
 RsaClass::~RsaClass()
 { // деструктор
-    this->m_PublicRsaKey.~RSAFunction();
-    this->m_PrivateRsaKey.~InvertibleRSAFunction();
+
+
+	delete this->m_PublicRsaKey;
+	delete this->m_PrivateRsaKey;
+	// this->m_PublicRsaKey.~RSAFunction();
+	// this->m_PrivateRsaKey.~InvertibleRSAFunction();
 }
 
 
@@ -52,17 +56,10 @@ void RsaClass::rsaGenerateKey()
     CryptoPP::AutoSeededRandomPool rnd;
     CryptoPP::InvertibleRSAFunction parameters;
 
-	// parameters.GenerateRandomWithKeySize (rnd, CryptoPP::AES::DEFAULT_KEYLENGTH);
 	parameters.GenerateRandomWithKeySize(rnd, 4096);
-
-	CryptoPP::RSA::PublicKey PublicRsaKey(parameters);
-	CryptoPP::RSA::PrivateKey PrivateRsaKey(parameters);
-
 
 	this->m_PublicRsaKey = new CryptoPP::RSA::PublicKey(parameters);
 	this->m_PrivateRsaKey = new CryptoPP::RSA::PrivateKey(parameters);
-	std::cout<<std::endl;
-
 }
 
 CryptoPP::RSA::PublicKey RsaClass::getPublicRsaKey() const {

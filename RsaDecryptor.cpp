@@ -26,9 +26,8 @@ void RsaDecryptor::readPrivateKey(const std::string &filename)
 
 	std::ifstream readedFile;
 	readedFile >> std::noskipws;
-	readedFile.open("keys/privateRsaKey.dat", std::ifstream::binary);
+	readedFile.open(filename, std::ifstream::binary);
 
-	std::string encryptedText = "";
 	std:: string tmpString = "";
 
 	if(readedFile.is_open())
@@ -41,38 +40,8 @@ void RsaDecryptor::readPrivateKey(const std::string &filename)
 	}
 	readedFile.close();
 	// Из строки получаем закрытый ключ и записываем в соответствующее поле класса
-	setPrivateRsaKey(tmpString, *m_PrivateRsaKey);
+	this->setPrivateRsaKey(tmpString, *this->m_PrivateRsaKey);
 
-}
-
-std::string RsaDecryptor::readKeyInFileForDecryptor(const std::string &filename)
-{// чтение публичного ключа вместе с шифрованным ключом для AES
-
-	std::ifstream readedFile;
-	readedFile >> std::noskipws;
-	readedFile.open("keys/publicRsaKey.dat", std::ifstream::binary);
-
-	std::string encryptedKey = "";
-	std:: string tmpString = "";
-
-	if(readedFile.is_open())
-	{
-		char temp;
-		for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
-		{
-			readedFile.read(&temp, sizeof(char));
-			encryptedKey.push_back(temp); // шифрованный аес ключ
-		}
-		while (readedFile.read(&temp, sizeof(char)))
-		{
-			tmpString.push_back(temp); // публичный рса ключ
-		}
-	}
-
-	readedFile.close();
-
-	setPublicRsaKey(tmpString, *this->m_PublicRsaKey);
-	return encryptedKey; // шифрованный ключ аес
 }
 
 std::string RsaDecryptor::rsaDecryptKey(const std::string& aesKeyStringForDescryptor)

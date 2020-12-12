@@ -33,8 +33,8 @@ public:
 	void setPrivateRsaKey(const std::string &privateRsaKeyString, CryptoPP::RSA::PublicKey m_PrivateRsaKey);
 
   protected:
-	  CryptoPP::RSA::PublicKey *m_PublicRsaKey; // открытый ключ шифрования
-	  CryptoPP::RSA::PrivateKey *m_PrivateRsaKey; // закрытый ключ шифрования
+	  CryptoPP::RSA::PublicKey *m_PublicRsaKey = nullptr; // открытый ключ шифрования
+	  CryptoPP::RSA::PrivateKey *m_PrivateRsaKey = nullptr; // закрытый ключ шифрования
     
   private:
     

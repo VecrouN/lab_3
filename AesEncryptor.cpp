@@ -6,7 +6,6 @@ AesEncryptor::AesEncryptor()
 	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
 	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
 	memset( m_PrivateTmpArray , 0x00, CryptoPP::AES::BLOCKSIZE+ CryptoPP::AES::DEFAULT_KEYLENGTH);
-	m_isNewKey = false;
 	m_isKeyToEncryptReady = false;
 	m_parent = nullptr;
 }
@@ -17,7 +16,6 @@ AesEncryptor::AesEncryptor(QWidget *parent)
 	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
 	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
 	memset( m_PrivateTmpArray , 0x00, CryptoPP::AES::BLOCKSIZE+ CryptoPP::AES::DEFAULT_KEYLENGTH);
-	m_isNewKey = false;
 	m_isKeyToEncryptReady = false;
 	m_parent = parent;
 }
@@ -29,7 +27,6 @@ AesEncryptor::AesEncryptor(AesEncryptor& _other)
 	memset( m_PrivateTmpArray , 0x00, CryptoPP::AES::BLOCKSIZE+ CryptoPP::AES::DEFAULT_KEYLENGTH);
 	this->setNewPrivateAesKey(_other.m_PrivateAesKey);
 	this->setNewInitializationVector(_other.m_PublicInitializationVector);
-	this->m_isNewKey = _other.m_isNewKey;
 	m_isKeyToEncryptReady = _other.m_isKeyToEncryptReady;
 	m_parent = _other.m_parent;
 }
@@ -47,7 +44,6 @@ AesEncryptor& AesEncryptor::operator=(const AesEncryptor& _other)
 
 	this->setNewPrivateAesKey(_other.m_PrivateAesKey);
 	this->setNewInitializationVector(_other.m_PublicInitializationVector);
-	this->m_isNewKey = _other.m_isNewKey;
 	m_isKeyToEncryptReady = _other.m_isKeyToEncryptReady;
 	m_parent = _other.m_parent;
 
@@ -62,11 +58,6 @@ AesEncryptor::~AesEncryptor()
 
 void AesEncryptor::aesEncryptFile(const std::string& filePath)
 {
-	if(!this->m_isNewKey)
-	{
-		this->createNewPublicInitializationVector(this->m_PublicInitializationVector);
-	}
-
 	std::string textForEncryption = "";
 	this->readFileForEncryption(filePath, textForEncryption);
 
@@ -160,6 +151,7 @@ void AesEncryptor::writeFileForEncryption(const std::string& filePath, const std
 		{
 			buffString.push_back(static_cast<char>(m_PublicInitializationVector[i]));
 		}
+		outFile.write(this->m_encryptedAesKey.c_str(), this->m_encryptedAesKey.size());
 		outFile.write(buffString.c_str(), buffString.size());
 		outFile.write(encryptedText.c_str(),size);
 
@@ -183,10 +175,6 @@ void AesEncryptor::addEncryptToPath(std::string& filePath)
 	filePath = path+name;
 }
 
-void AesEncryptor::setIsNewKey(bool _newValue)
-{
-	this->m_isNewKey = _newValue;
-}
 
 void AesEncryptor::setNewInitializationVector(const byte _newPublicInitializationVector[])
 {
@@ -213,4 +201,14 @@ void AesEncryptor::setIsKeyToEncryptReady(bool _isKeyToEncryptReady)
 bool AesEncryptor::getIsKeyToEncryptReady()
 {
 	return this->m_isKeyToEncryptReady;
+}
+
+std::string AesEncryptor::getEncryptedAesKey()
+{
+	return this->m_encryptedAesKey;
+}
+
+void AesEncryptor::setEncryptedAesKey(const std::string& _encryptedAesKey)
+{
+	this->m_encryptedAesKey = _encryptedAesKey;
 }
