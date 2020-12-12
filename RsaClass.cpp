@@ -88,7 +88,7 @@ std::string RsaClass::getStringPublicRsaKey(CryptoPP::RSA::PublicKey m_PublicRsa
     return publicRsaKeyString;
 }
 
-std::string RsaClass::getStringRsaPrivateKey(CryptoPP::RSA::PublicKey m_PrivateRsaKey) const {
+std::string RsaClass::getStringRsaPrivateKey(CryptoPP::RSA::PrivateKey m_PrivateRsaKey) const {
 // метод принимает закрытый ключ в стандартном формате, возвращает его в виде строки
       
     std::string privateRsaKeyString;
