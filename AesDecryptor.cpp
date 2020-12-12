@@ -66,8 +66,7 @@ AesDecryptor& AesDecryptor::operator=(const AesDecryptor& _other)
 
 AesDecryptor::~AesDecryptor()
 {
-	memset( m_PrivateAesKey , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH ); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
-	memset( m_PublicInitializationVector , 0x00, CryptoPP::AES::BLOCKSIZE ); // заполняет iv значением 0x00, длина iv CryptoPP::AES::BLOCKSIZE
+	delete m_rsaDecryptor;
 }
 
 
@@ -88,8 +87,9 @@ void AesDecryptor::aesDecryptFile(const std::string& filePath)
 
 	// ************************ //
    //   конец aesDecryptFile   //
-  // ************************ //
+	// ************************ //
 }
+
 
 void AesDecryptor::readFileForDecryption(const std::string& filePath, std::string& textForDecryption)
 {
@@ -177,13 +177,6 @@ void AesDecryptor::addDecryptToPath(std::string& filePath)
 
 }
 
-void AesDecryptor::setNewPrivateAesKey(const byte _newPrivateAesKey[])
-{
-	for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
-	{
-		this->m_PrivateAesKey[i] = _newPrivateAesKey[i];
-	}
-}
 
 void AesDecryptor::setRsaDecryptor(RsaDecryptor* _rsaDecryptor)
 {

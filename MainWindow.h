@@ -3,10 +3,11 @@
 
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QFileDialog>
 
 #include "AesDecryptor.h"
 #include "AesEncryptor.h"
-#include "createNewKeys.h"
+#include "CreateNewKeys.h"
 
 #include "RsaDecryptor.h"
 #include "RsaEncryptor.h"
@@ -29,7 +30,6 @@ public:
 	//void setNewIV_PublicKey();
 
 	protected: int readyIndex;
-	protected: int *ptrReadyIndex = nullptr;
 
 	private slots:
 
@@ -50,16 +50,19 @@ public:
 
 	void on_openPrivateRsaKeyFilePushButoon_clicked();
 
-	private: Ui::MainWindow *ui;
-	private:RsaDecryptor *m_rsaDecryptor;
-	private:RsaEncryptor *m_rsaEncryptor;
-	private:AesEncryptor *m_aesEncryptor;
-	private:AesDecryptor *m_aesDecryptor;
-	private:createNewKeys *m_Dialog;
+	private: Ui::MainWindow *ui = nullptr;
+	private:RsaDecryptor *m_rsaDecryptor = nullptr;
+	private:RsaEncryptor *m_rsaEncryptor = nullptr;
+	private:AesEncryptor *m_aesEncryptor = nullptr;
+	private:AesDecryptor *m_aesDecryptor = nullptr;
+	private:CreateNewKeys *m_Dialog = nullptr;
+	byte *ptrPrivateAesKey = nullptr;
+	protected: int *ptrReadyIndex = nullptr;
+
+
 	std::string m_filePathToEncrypt;
 	std::string m_filePathToDecrypt;
 	byte m_TmpByteArray[ CryptoPP::AES::DEFAULT_KEYLENGTH + CryptoPP::AES::BLOCKSIZE];
-	byte * ptrPrivateAesKey;
 	std::string m_filePath = "";
 
 	bool m_isTextToEncryptReady;

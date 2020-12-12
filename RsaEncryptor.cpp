@@ -70,7 +70,6 @@ std::string RsaEncryptor::rsaEncryptKey(const std::string& aesKeyString)
 { // шифрование ключа AES
     CryptoPP::AutoSeededRandomPool rng;
 	std::string encryptesText;
-	encryptesText.resize(aesKeyString.size()*2);
 	//rsaGenerateKey();
 
 	//CryptoPP::RSAES_OAEP_SHA_Encryptor e(*this->m_PublicRsaKey);

@@ -10,13 +10,13 @@ namespace Ui {
 	class createNewKeys;
 }
 
-class createNewKeys : public QDialog
+class CreateNewKeys : public QDialog
 {
 		Q_OBJECT
 
 	public:
-		explicit createNewKeys(byte *_array,  int *readyIndex, QWidget *parent = nullptr);
-		~createNewKeys();
+		explicit CreateNewKeys(byte *_array,  int *readyIndex, QWidget *parent = nullptr);
+		~CreateNewKeys();
 
 
 	private slots:
@@ -27,11 +27,11 @@ class createNewKeys : public QDialog
 		void on_buttonBox_2_rejected();
 
 	private:
-		Ui::createNewKeys *ui;
-		PaintScene *scene;
-		int *m_readyIndex;
-		byte *m_array;
-		QWidget *m_parent;
+		Ui::createNewKeys *ui = nullptr;
+		PaintScene *scene = nullptr;
+		int *m_readyIndex = nullptr;
+		byte *m_array = nullptr;
+		QWidget *m_parent = nullptr;
 };
 
 #endif // CREATENEWKEYS_H

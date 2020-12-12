@@ -1,7 +1,7 @@
-#include "createNewKeys.h"
+#include "CreateNewKeys.h"
 #include "ui_createNewKeys.h"
 
-createNewKeys::createNewKeys(byte *_array,  int *readyIndex, QWidget *parent) :
+CreateNewKeys::CreateNewKeys(byte *_array,  int *readyIndex, QWidget *parent) :
 	QDialog(parent),
 	ui(new Ui::createNewKeys)
 {
@@ -12,15 +12,19 @@ createNewKeys::createNewKeys(byte *_array,  int *readyIndex, QWidget *parent) :
 
 	ui->graphicsView->setScene(scene);
 	m_parent = parent;
-	connect(scene, &PaintScene::changed, this, &createNewKeys::isReady);
+	connect(scene, &PaintScene::changed, this, &CreateNewKeys::isReady);
 }
 
-createNewKeys::~createNewKeys()
+CreateNewKeys::~CreateNewKeys()
 {
 	delete ui;
+	delete scene;
+	delete m_readyIndex;
+	delete m_array;
+	delete m_parent;
 }
 
-void createNewKeys::isReady()
+void CreateNewKeys::isReady()
 {
 	this->ui->progressBar->setValue(static_cast<int>((static_cast<double>(*m_readyIndex)/(CryptoPP::AES::DEFAULT_KEYLENGTH + CryptoPP::AES::BLOCKSIZE))*100));
 
@@ -30,12 +34,12 @@ void createNewKeys::isReady()
 	}
 }
 
-void createNewKeys::on_okButtonBox_accepted()
+void CreateNewKeys::on_okButtonBox_accepted()
 {
 	//this->m_parent->getAesEncryptor();
 }
 
-void createNewKeys::on_buttonBox_2_rejected()
+void CreateNewKeys::on_buttonBox_2_rejected()
 {
 
 	std::cout<<"new: "<<std::endl;

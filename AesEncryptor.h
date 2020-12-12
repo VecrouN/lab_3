@@ -1,20 +1,12 @@
 #ifndef AESENCRYPTOR_H
 #define AESENCRYPTOR_H
 
-#include "Encryptor.h"
-
-#include "RsaEncryptor.h"
-#include "RsaDecryptor.h"
-
+#include "AesClass.h"
 
 #include <QMainWindow>
-#include <QMessageBox>
-#include <crypto++/aes.h>
-#include <crypto++/modes.h>
-#include <iostream>
-#include <fstream>
 
-class AesEncryptor : public Encryptor
+
+class AesEncryptor : public AesClass
 {
 	  // ************* //
 	 //    public     //
@@ -30,25 +22,16 @@ class AesEncryptor : public Encryptor
 	public: void writeFileForEncryption(const std::string& filePath, const std::string& encryptedText);
 	public: void addEncryptToPath(std::string& filePath);
 	public: void setNewInitializationVector(const byte _newPublicInitializationVector[]);
-	public: void setNewPrivateAesKey(const byte _newPrivateAesKey[]);
 	public: void setIsKeyToEncryptReady(bool _isKeyToEncryptReady);
 	public: bool getIsKeyToEncryptReady();
 	public: std::string getEncryptedAesKey();
 	public: void setEncryptedAesKey(const std::string &_encryptedAesKey);
 
 	  // ************* //
-	 //   protected   //
-	// ************* //
-	protected:
-
-	  // ************* //
 	 //    private    //
 	// ************* //
-	private: byte m_PrivateAesKey[ CryptoPP::AES::DEFAULT_KEYLENGTH ]; // ключ шифрования
-	private: byte m_PublicInitializationVector[ CryptoPP::AES::BLOCKSIZE ]; // вектор инициализации для шифровки 1ого блока, не скрывается
 	private: byte m_PrivateTmpArray[ CryptoPP::AES::BLOCKSIZE+CryptoPP::AES::DEFAULT_KEYLENGTH ]; // вектор инициализации для шифровки 1ого блока, не скрывается
 	private: std::string m_encryptedAesKey = "";
-	private: QWidget *m_parent;
 
 	bool m_isKeyToEncryptReady;
 };

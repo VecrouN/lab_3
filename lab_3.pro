@@ -9,35 +9,31 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    AesClass.cpp \
     AesDecryptor.cpp \
     AesEncryptor.cpp \
-    Cryptor.cpp \
-    Decryptor.cpp \
-    Encryptor.cpp \
+    CreateNewKeys.cpp \
     RsaClass.cpp \
     RsaDecryptor.cpp \
     RsaEncryptor.cpp \
-    createNewKeys.cpp \
     PaintScene.cpp \
     main.cpp \
     MainWindow.cpp
 
 HEADERS += \
+    AesClass.h \
     AesDecryptor.h \
     AesEncryptor.h \
-    Cryptor.h \
-    Decryptor.h \
-    Encryptor.h \
+    CreateNewKeys.h \
     MainWindow.h \
     PaintScene.h \
     RsaDecryptor.h \
     RsaClass.h \
-    RsaEncryptor.h \
-    createNewKeys.h
+    RsaEncryptor.h
 
 FORMS += \
-    MainWindow.ui \
-    createNewKeys.ui
+    CreateNewKeys.ui \
+    MainWindow.ui
 
 LIBS += -L/usr/lib/crypto++ -lcrypto++
 INCS += -I/usr/include/crypto++

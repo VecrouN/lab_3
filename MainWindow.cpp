@@ -1,7 +1,6 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
-#include <QFileDialog>
-#include <iostream>
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -21,6 +20,13 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
 	delete ui;
+	delete m_rsaDecryptor;
+	delete m_rsaEncryptor;
+	delete m_aesEncryptor;
+	delete m_aesDecryptor;
+	delete m_Dialog;
+	delete ptrPrivateAesKey;
+	delete ptrReadyIndex;
 }
 
 AesEncryptor* MainWindow::getAesEncryptor()
@@ -126,8 +132,8 @@ void MainWindow::on_pushButton_clicked() // кнопка шифровки
 		readyIndex = 0;
 		ptrReadyIndex = &readyIndex;
 
-		m_Dialog = new createNewKeys(m_TmpByteArray, ptrReadyIndex, this);
-		connect(m_Dialog, &createNewKeys::accepted, this, &MainWindow::setNewIV_PublicKey);
+		m_Dialog = new CreateNewKeys(m_TmpByteArray, ptrReadyIndex, this);
+		connect(m_Dialog, &CreateNewKeys::accepted, this, &MainWindow::setNewIV_PublicKey);
 		m_Dialog->setModal(true);
 		m_Dialog->show();
 

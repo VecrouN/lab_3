@@ -12,7 +12,8 @@ PaintScene::PaintScene(byte *_array, int *readyIndex, QObject *parent) : QGraphi
 
 PaintScene::~PaintScene()
 {
-
+	delete  m_array;
+	delete  m_readyIndex;
 }
 
 void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
