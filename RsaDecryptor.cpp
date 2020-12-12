@@ -52,10 +52,10 @@ std::string RsaDecryptor::rsaDecryptKey(const std::string& aesKeyStringForDescry
     CryptoPP::AutoSeededRandomPool rng;
     std::string decryptesText;
 
-	//CryptoPP::RSAES_OAEP_SHA_Decryptor e(*m_PublicRsaKey);
-	CryptoPP::RSAES_OAEP_SHA_Decryptor e(m_PrivateRsaKey);
+	//CryptoPP::RSAES_OAEP_SHA_Decryptor d(*m_PublicRsaKey);
+	CryptoPP::RSAES_OAEP_SHA_Decryptor d(m_PrivateRsaKey);
     CryptoPP::StringSource(aesKeyStringForDescryptor, true,
-                           new CryptoPP::PK_DecryptorFilter(rng,e,new CryptoPP::StringSink(decryptesText)));
+                           new CryptoPP::PK_DecryptorFilter(rng, d, new CryptoPP::StringSink(decryptesText)));
     return decryptesText;
 
 }
