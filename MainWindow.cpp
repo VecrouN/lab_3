@@ -24,9 +24,8 @@ MainWindow::~MainWindow()
 	delete m_rsaEncryptor;
 	delete m_aesEncryptor;
 	delete m_aesDecryptor;
-	delete m_Dialog;
-	delete ptrPrivateAesKey;
-	delete ptrReadyIndex;
+	//delete m_Dialog;
+	//delete ptrPrivateAesKey;
 }
 
 AesEncryptor* MainWindow::getAesEncryptor()
@@ -102,19 +101,7 @@ void MainWindow::on_createNewRsaKeysPushButton_clicked()
 		QMessageBox msgBox;
 		msgBox.setText("Ключи созданы");
 		msgBox.exec();
-
-		/*
-		memset( m_TmpByteArray , 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH + CryptoPP::AES::BLOCKSIZE); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
-		readyIndex = 0;
-		ptrReadyIndex = &readyIndex;
-		m_Dialog = new createNewKeys(m_TmpByteArray, ptrReadyIndex, this);
-		connect(m_Dialog, &createNewKeys::accepted, this, &MainWindow::setNewIV_PublicKey);
-		m_Dialog->setModal(true);
-		m_Dialog->show();
-		*/
 	}
-
-
 }
 
 void MainWindow::on_openFileToEncryptPushButton_clicked() // клик по кнопке открыть файл для шифровки

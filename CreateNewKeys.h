@@ -22,7 +22,7 @@ class CreateNewKeys : public QDialog
 	private slots:
 		void isReady();
 
-		void on_okButtonBox_accepted();
+		//void on_okButtonBox_accepted() = default;
 
 		void on_buttonBox_2_rejected();
 

@@ -1,5 +1,5 @@
 #include "AesDecryptor.h"
-#include <iostream>
+
 
 AesDecryptor::AesDecryptor()
 {
@@ -66,7 +66,6 @@ AesDecryptor& AesDecryptor::operator=(const AesDecryptor& _other)
 
 AesDecryptor::~AesDecryptor()
 {
-	delete m_rsaDecryptor;
 }
 
 

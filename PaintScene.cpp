@@ -1,24 +1,22 @@
 #include "PaintScene.h"
-#include <iostream>
+
+
 PaintScene::PaintScene(byte *_array, int *readyIndex, QObject *parent) : QGraphicsScene(parent)
 {
-	//m_readyIndex = 0;
 	m_array = _array;
 	m_readyIndex = readyIndex;
-	m_step = 1;
+	m_step = 10;
 	m_indexStep = 0;
 }
 
-
 PaintScene::~PaintScene()
 {
-	delete  m_array;
-	delete  m_readyIndex;
+
 }
+
 
 void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-	;
 	previousPoint = event->scenePos();
 
 	// При нажатии кнопки мыши отрисовываем эллипс
@@ -40,33 +38,33 @@ void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 			event->scenePos().y(),
 			QPen(Qt::black,10,Qt::SolidLine,Qt::RoundCap));
 	// Обновляем данные о предыдущей координате
-		previousPoint = event->scenePos();
-		++m_indexStep;
-		if(m_indexStep == m_step)
+	previousPoint = event->scenePos();
+	++m_indexStep;
+	if(m_indexStep == m_step)
+	{
+		m_indexStep = 0;
+		tmpChar = static_cast<int>(previousPoint.x()+previousPoint.y()) % 255 - 128;
+		if(*m_readyIndex < CryptoPP::AES::DEFAULT_KEYLENGTH + CryptoPP::AES::BLOCKSIZE)
 		{
-			m_indexStep = 0;
-			tmpChar = static_cast<int>(previousPoint.x()+previousPoint.y()) % 255 - 128;
-			if(*m_readyIndex < CryptoPP::AES::DEFAULT_KEYLENGTH + CryptoPP::AES::BLOCKSIZE)
+			if(( static_cast<int>(tmpChar) != 127 ) && ( ( static_cast<int>(tmpChar) < 0 ) || ( static_cast<int>(tmpChar) >  31 ) ))
 			{
-				if(( static_cast<int>(tmpChar) != 127 ) && ( ( static_cast<int>(tmpChar) < 0 ) || ( static_cast<int>(tmpChar) >  31 ) ))
-				{
 
-					m_array[*m_readyIndex] = tmpChar;
-					++(*m_readyIndex);
-				}
-
+				m_array[*m_readyIndex] = tmpChar;
+				++(*m_readyIndex);
 			}
-			else
+
+		}
+		else
+		{
+			if(( static_cast<int>(tmpChar) != 127 ) && ( ( static_cast<int>(tmpChar) < 0 ) || ( static_cast<int>(tmpChar) >  31 ) ))
 			{
-				if(( static_cast<int>(tmpChar) != 127 ) && ( ( static_cast<int>(tmpChar) < 0 ) || ( static_cast<int>(tmpChar) >  31 ) ))
+				for (int i = 0; i < CryptoPP::AES::BLOCKSIZE + CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
 				{
-					for (int i = 0; i < CryptoPP::AES::BLOCKSIZE + CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
-					{
-						m_array[i] = m_array[i+1];
-					}
-					;
-					m_array[*m_readyIndex] = tmpChar;
+					m_array[i] = m_array[i+1];
 				}
+				;
+				m_array[*m_readyIndex] = tmpChar;
 			}
 		}
+	}
 }

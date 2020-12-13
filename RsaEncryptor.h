@@ -1,14 +1,8 @@
 #ifndef RSAENCRYPTOR_H
 #define RSAENCRYPTOR_H
 
-#include <iostream>
-#include <fstream>
-
 #include "RsaClass.h"
 
-#include <crypto++/modes.h>
-#include <crypto++/rsa.h>
-#include <crypto++/aes.h>
 
 class RsaEncryptor : public RsaClass
 {

@@ -4,7 +4,8 @@
 // Подключение необходимых библиотек и модулей
 #include <crypto++/rsa.h>
 #include <crypto++/modes.h>
-
+#include <crypto++/osrng.h>
+#include <crypto++/files.h>
 // Класс содержит основные методы и поля для работы с алгоритмом RSA
 class RsaClass
 {
@@ -19,9 +20,9 @@ public:
     CryptoPP::RSA::PrivateKey getPrivateRsaKey() const; // получение значения из поля закрытого ключа
 
     // получение публичного ключа в виде строки
-    std::string getStringPublicRsaKey(CryptoPP::RSA::PublicKey& m_PublicRsaKey) const;
+	std::string getStringPublicRsaKey() const;
     // получение закрытого ключа в виде строки
-    std::string getStringRsaPrivateKey(CryptoPP::RSA::PublicKey& m_PrivateRsaKey) const;
+	std::string getStringRsaPrivateKey(	) const;
 
     // функция, которая устанавливает поле открытого ключа из строки
     void setPublicRsaKey(std::string publicRsaKeyString);

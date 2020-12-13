@@ -1,19 +1,9 @@
 #include "RsaClass.h"
 
-#include <iostream>
-#include <fstream>
-#include <crypto++/modes.h>
-#include <crypto++/rsa.h>
-#include <crypto++/osrng.h>
-#include <crypto++/aes.h>
-#include <crypto++/base64.h>
-#include <crypto++/files.h>
 
 RsaClass::RsaClass()
 { // конструктор
-    //CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
-    //m_PublicRsaKey.Initialize(e,d);
-    //m_PrivateRsaKey.Initialize(n,e,d);
+
 }
 
 // конструктор копирования
@@ -70,7 +60,7 @@ CryptoPP::RSA::PrivateKey RsaClass::getPrivateRsaKey() const {
     return m_PrivateRsaKey;
 }
 
-std::string RsaClass::getStringPublicRsaKey(CryptoPP::RSA::PublicKey& m_PublicRsaKey) const {
+std::string RsaClass::getStringPublicRsaKey() const {
 // метод принимает открытый ключ в стандартном формате, возвращает его в виде строки
     std::string publicRsaKeyString;
     CryptoPP::StringSink sourse(publicRsaKeyString);
@@ -78,7 +68,7 @@ std::string RsaClass::getStringPublicRsaKey(CryptoPP::RSA::PublicKey& m_PublicRs
     return publicRsaKeyString;
 }
 
-std::string RsaClass::getStringRsaPrivateKey(CryptoPP::RSA::PublicKey& m_PrivateRsaKey) const {
+std::string RsaClass::getStringRsaPrivateKey() const {
 // метод принимает закрытый ключ в стандартном формате, возвращает его в виде строки
     std::string privateRsaKeyString;
     CryptoPP::StringSink sourse(privateRsaKeyString);
@@ -104,7 +94,6 @@ void RsaClass::savePrivateKey(const std::string &filename, CryptoPP::RSA::Privat
     CryptoPP::ByteQueue queue;
 	privKey.Save(queue);
 
-	// directoryPath = usr/dir/+ "privateKey.key"
 	CryptoPP::FileSink file((filename + "/privateKey.key").c_str());
 
 
