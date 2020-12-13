@@ -58,8 +58,8 @@ void RsaClass::rsaGenerateKey(const std::string& dirPath)
 	CryptoPP::RSA::PrivateKey m_PrivateRsaKey(parameters);
 
 
-	savePrivateKey(dirPath);
-	savePublicKey(dirPath);
+	savePrivateKey(dirPath, m_PrivateRsaKey);
+	savePublicKey(dirPath, m_PublicRsaKey);
 }
 
 CryptoPP::RSA::PublicKey RsaClass::getPublicRsaKey() const {
@@ -99,10 +99,10 @@ void RsaClass::setPrivateRsaKey(std::string privateRsaKeyString) {
     this->m_PrivateRsaKey.Load(sourse);
 }
 
-void RsaClass::savePrivateKey(const std::string &filename)
+void RsaClass::savePrivateKey(const std::string &filename, CryptoPP::RSA::PrivateKey privKey)
 { // сохранение приватного ключа в файл
     CryptoPP::ByteQueue queue;
-    this->m_PrivateRsaKey.Save(queue);
+	privKey.Save(queue);
 
 	// directoryPath = usr/dir/+ "privateKey.key"
 	CryptoPP::FileSink file((filename + "/privateKey.key").c_str());
@@ -113,10 +113,10 @@ void RsaClass::savePrivateKey(const std::string &filename)
 
 }
 
-void RsaClass::savePublicKey(const std::string &filename)
+void RsaClass::savePublicKey(const std::string &filename, CryptoPP::RSA::PublicKey pubKey)
 {// сохранение открытого ключа в файл
     CryptoPP::ByteQueue queue;
-    this->m_PublicRsaKey.Save(queue);
+	pubKey.Save(queue);
 
 	CryptoPP::FileSink file((filename + "/publicKey.key").c_str());
 

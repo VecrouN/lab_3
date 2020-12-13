@@ -33,5 +33,13 @@ std::string RsaEncryptor::rsaEncryptKey(const std::string& aesKeyString)
                            new CryptoPP::PK_EncryptorFilter
                           (rng, encryptor, new CryptoPP::StringSink(encryptesText)));
 
+
+	std::cout<<"\n**********\nRsaEncryptor.cpp 37\nencrypted key\n**********"<<std::endl;
+	for(int i = 0; i < encryptesText.length(); ++i)
+	{
+		std::cout<<"i = \t"<<i<<"\tkey[i] = \t"<<encryptesText[i]<<"\tstatic_cast<int>(m_PrivateAesKey[i])\t"<< static_cast<int>(encryptesText[i])<<std::endl;
+	}
+
+
     return encryptesText;
 }

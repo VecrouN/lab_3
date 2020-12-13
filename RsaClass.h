@@ -29,9 +29,9 @@ public:
     void setPrivateRsaKey(std::string privateRsaKeyString);
 
     // функция, сохраняющая открытый ключ в специальный файл
-    void savePublicKey(const std::string& filename);
+	void savePublicKey(const std::string& filename, CryptoPP::RSA::PublicKey pubKey);
     // функция, сохраняющая закрытый ключ в специальный файл
-    void savePrivateKey(const std::string& filename);
+	void savePrivateKey(const std::string& filename, CryptoPP::RSA::PrivateKey privKey	);
 
     // функция, загружающая открытый ключ из специального файл
     void LoadPublicKey(const std::string& filename);

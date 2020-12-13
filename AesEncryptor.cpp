@@ -63,7 +63,7 @@ void AesEncryptor::aesEncryptFile(const std::string& filePath)
 
 
 
-	memset(m_PrivateAesKey, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH);
+	//memset(m_PrivateAesKey, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH);
 
 
 
@@ -75,6 +75,8 @@ void AesEncryptor::aesEncryptFile(const std::string& filePath)
 	CryptoPP::StreamTransformationFilter stfEncryptor(cbcEncryption, new CryptoPP::StringSink( encryptedText ) );
 	stfEncryptor.Put( reinterpret_cast<const unsigned char*>( textForEncryption.c_str() ), textForEncryption.length()); // reinterpret_cast преобразование указателя
 	stfEncryptor.MessageEnd();
+
+
 
 	writeFileForEncryption(filePath, encryptedText);
 

@@ -59,6 +59,15 @@ void MainWindow::setNewIV_PublicKey()
 
 	m_aesEncryptor->setNewPrivateAesKey(tmpArray); // установка ключа в аес енкриптор
 	// m_aesEncryptor->setIsKeyToEncryptReady(true);
+
+
+	std::cout<<"\n**********\MainWindow.cpp 64\nnoriginal key\n**********"<<std::endl;
+	for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH ; ++i)
+	{
+		std::cout<<"i = \t"<<i<<"\tkey[i] = \t"<<tmpArray[i]<<"\tstatic_cast<int>(m_PrivateAesKey[i])\t"<< static_cast<int>(tmpArray[i])<<std::endl;
+	}
+
+
 	this->m_aesEncryptor->setEncryptedAesKey(m_rsaEncryptor->rsaEncryptKey(tmpConvertString)); // сохранение в енкрипт шифрованого ключа
 
 
