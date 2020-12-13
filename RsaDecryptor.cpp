@@ -12,57 +12,29 @@ RsaDecryptor::RsaDecryptor():RsaClass() {
 
 }
 
-RsaDecryptor::~RsaDecryptor()
-{
-    CryptoPP::Integer n("0xbeaadb3d839f3b5f"), e("0x11"), d("0x21a5ae37b9959db9");
-
-	//m_PublicRsaKey.Initialize(e,d);
-	//m_PrivateRsaKey.Initialize(n,e,d);
-}
-
-
-void RsaDecryptor::readPrivateKey(const std::string &filename)
-{// чтение файла с приватным ключом
-
-	std::ifstream readedFile;
-	readedFile >> std::noskipws;
-	readedFile.open(filename, std::ifstream::binary);
-
-	std:: string tmpString = "";
-
-	if(readedFile.is_open())
-	{
-		char temp;
-		while (readedFile.read(&temp, sizeof(char)))
-		{
-			tmpString.push_back(temp);
-		}
-	}
-	readedFile.close();
-	// Из строки получаем закрытый ключ и записываем в соответствующее поле класса
-	//this->m_PrivateRsaKey = nullptr;
-	this->setPrivateRsaKey(tmpString);
-	//this->setPrivateRsaKey(tmpString, *this->m_PrivateRsaKey);
-
+RsaDecryptor::~RsaDecryptor() {
 
 }
 
 std::string RsaDecryptor::rsaDecryptKey(const std::string& aesKeyStringForDescryptor)
 {// расшифровка ключа
     CryptoPP::AutoSeededRandomPool rng;
-    std::string decryptesText;
-	byte tmpArray[CryptoPP::AES::DEFAULT_KEYLENGTH];
-	memset(tmpArray, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH);
-	for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
+	std::string decryptesText;
+	//decryptesText.resize(aesKeyStringForDescryptor.size(), 'a');
+    CryptoPP::RSAES_OAEP_SHA_Decryptor d(m_PrivateRsaKey);
+
+	CryptoPP::PK_DecryptorFilter *der = new CryptoPP::PK_DecryptorFilter(rng, d,new CryptoPP::StringSink( decryptesText));
+
+	CryptoPP::ArraySource test = new CryptoPP::ArraySource(aesKeyStringForDescryptor, true, new CryptoPP::PK_DecryptorFilter(rng, d,new CryptoPP::StringSink( decryptesText)));
+
+
+	std::cout<<"\n**********\nRsaDecryptor.cpp 31\ndecrypted key\n**********"<<std::endl;
+	for(int i = 0; i < decryptesText.length(); ++i)
 	{
-		tmpArray[i] = static_cast<byte>(aesKeyStringForDescryptor[i]);
+		std::cout<<"i = \t"<<i<<"\tkey[i] = \t"<<decryptesText[i]<<"\tstatic_cast<int>(m_PrivateAesKey[i])\t"<< static_cast<int>(decryptesText[i])<<std::endl;
 	}
 
 
-	//CryptoPP::RSAES_OAEP_SHA_Decryptor d(*m_PublicRsaKey);
-	CryptoPP::RSAES_OAEP_SHA_Decryptor d(m_PrivateRsaKey);
-    CryptoPP::StringSource(aesKeyStringForDescryptor, true,
-                           new CryptoPP::PK_DecryptorFilter(rng, d, new CryptoPP::StringSink(decryptesText)));
-    return decryptesText;
 
+    return decryptesText;
 }

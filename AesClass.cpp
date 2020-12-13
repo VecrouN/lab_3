@@ -7,7 +7,7 @@ AesClass::AesClass()
 
 AesClass::~AesClass()
 {
-	delete m_parent;
+
 }
 
 void AesClass::setNewPrivateAesKey(const byte _newPrivateAesKey[])

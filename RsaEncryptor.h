@@ -1,8 +1,14 @@
 #ifndef RSAENCRYPTOR_H
 #define RSAENCRYPTOR_H
 
+#include <iostream>
+#include <fstream>
+
 #include "RsaClass.h"
 
+#include <crypto++/modes.h>
+#include <crypto++/rsa.h>
+#include <crypto++/aes.h>
 
 class RsaEncryptor : public RsaClass
 {
@@ -10,10 +16,8 @@ class RsaEncryptor : public RsaClass
         RsaEncryptor(); // конструктор
         ~RsaEncryptor(); // деструктор
 
-		void readPublicKey(const std::string& filename); // чтение файла открытого ключа
-		void savePublicKey(const std::string &filePath); // сохранение публичного ключа вместе с шифрованным ключом для AES
-		std::string rsaEncryptKey(const std::string& aesKeyString); // шифрование ключа AES, получение зашифрованного ключа в виде строки
-		void savePrivateKey(const std::string &filePath); // сохранение приватного ключа в файл
+        // шифрование ключа AES, получение зашифрованного ключа в виде строки
+		std::string rsaEncryptKey(const std::string& aesKeyString);
 
     protected:
 
@@ -21,3 +25,4 @@ class RsaEncryptor : public RsaClass
 };
 
 #endif // RSAENCRYPTOR_H
+
