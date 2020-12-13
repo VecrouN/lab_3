@@ -6,6 +6,8 @@
 #include <crypto++/modes.h>
 #include <crypto++/osrng.h>
 #include <crypto++/files.h>
+#include <QMessageBox>
+
 // Класс содержит основные методы и поля для работы с алгоритмом RSA
 class RsaClass
 {

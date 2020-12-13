@@ -42,73 +42,69 @@ AesDecryptor* MainWindow::getAesDecryptor()
 
 void MainWindow::setNewIV_PublicKey()
 {
-	byte tmpArray[CryptoPP::AES::BLOCKSIZE];
-	for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
-	{
-		tmpArray[i] = this->m_TmpByteArray[i];
+	try {
+		byte tmpArray[CryptoPP::AES::BLOCKSIZE];
+		for(int i = 0; i < CryptoPP::AES::BLOCKSIZE; ++i)
+		{
+			tmpArray[i] = this->m_TmpByteArray[i];
+		}
+		this->m_aesEncryptor->setNewInitializationVector(tmpArray); // установка поля iv в аес енкриптор
+		std::string tmpConvertString = "";
+
+		for(int i = CryptoPP::AES::BLOCKSIZE; i < CryptoPP::AES::BLOCKSIZE+CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
+		{
+			tmpArray[i-CryptoPP::AES::BLOCKSIZE] = this->m_TmpByteArray[i];
+			tmpConvertString.push_back(static_cast<char>(this->m_TmpByteArray[i]));
+		}
+
+		m_aesEncryptor->setNewPrivateAesKey(tmpArray); // установка ключа в аес енкриптор
+
+
+		this->m_aesEncryptor->setEncryptedAesKey(m_rsaEncryptor->rsaEncryptKey(tmpConvertString)); // сохранение в енкрипт шифрованого ключа
+
+
+		this->m_aesEncryptor->aesEncryptFile(this->m_filePathToEncrypt);
+	}  catch (...) {
+
 	}
-	this->m_aesEncryptor->setNewInitializationVector(tmpArray); // установка поля iv в аес енкриптор
-	std::string tmpConvertString = "";
 
-	for(int i = CryptoPP::AES::BLOCKSIZE; i < CryptoPP::AES::BLOCKSIZE+CryptoPP::AES::DEFAULT_KEYLENGTH; ++i)
-	{
-		tmpArray[i-CryptoPP::AES::BLOCKSIZE] = this->m_TmpByteArray[i];
-		tmpConvertString.push_back(static_cast<char>(this->m_TmpByteArray[i]));
-	}
-
-	m_aesEncryptor->setNewPrivateAesKey(tmpArray); // установка ключа в аес енкриптор
-	// m_aesEncryptor->setIsKeyToEncryptReady(true);
-
-
-	std::cout<<"\n**********\MainWindow.cpp 64\nnoriginal key\n**********"<<std::endl;
-	for(int i = 0; i < CryptoPP::AES::DEFAULT_KEYLENGTH ; ++i)
-	{
-		std::cout<<"i = \t"<<i<<"\tkey[i] = \t"<<tmpArray[i]<<"\tstatic_cast<int>(m_PrivateAesKey[i])\t"<< static_cast<int>(tmpArray[i])<<std::endl;
-	}
-
-
-	this->m_aesEncryptor->setEncryptedAesKey(m_rsaEncryptor->rsaEncryptKey(tmpConvertString)); // сохранение в енкрипт шифрованого ключа
-
-
-	this->m_aesEncryptor->aesEncryptFile(this->m_filePathToEncrypt);
 }
 
 
 
 void MainWindow::on_createNewRsaKeysPushButton_clicked()
 {
-	QString QDirectoryPath = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-													"/home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug",
+	QString QDirectoryPath = QFileDialog::getExistingDirectory(this, tr("Open Directory"),"",
+
 													QFileDialog::ShowDirsOnly
 													| QFileDialog::DontResolveSymlinks);
+	//"/home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug",
 
 	if(QDirectoryPath.toStdString() != "")
 	{
+		try {
+			std::string directoryPath = QDirectoryPath.toStdString();
+
+			this->m_rsaEncryptor->rsaGenerateKey(directoryPath);
+
+			QMessageBox msgBox;
+			msgBox.setText("Ключи созданы");
+			msgBox.exec();
+		}
+		}  catch (...) {
+
+		}
 		// генерация рса ключей
 
-		std::string directoryPath = QDirectoryPath.toStdString();
 
-		this->m_aesEncryptor->setIsKeyToEncryptReady(true);
-		this->m_aesDecryptor->setIsKeyToDecryptReady(true);
-
-		this->m_rsaEncryptor->rsaGenerateKey(directoryPath);
-
-		this->m_rsaEncryptor->LoadPrivateKey(directoryPath + "/privateKey.key");
-		this->m_rsaEncryptor->LoadPublicKey(directoryPath + "/publicKey.key");
-
-		this->ui->publicRsaKeyPathLineEdit->setText("publicKey.key");
-		this->ui->pathFileToPrivateRsaKeyLineEdit->setText("privateKey.key");
-		QMessageBox msgBox;
-		msgBox.setText("Ключи созданы");
-		msgBox.exec();
-	}
 }
 
 void MainWindow::on_openFileToEncryptPushButton_clicked() // клик по кнопке открыть файл для шифровки
 {
 	QString QFileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-													"/home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug",
+													"",
 													tr("TextFile (*.txt)"));
+	//home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug
 	if(QFileName.toStdString() != "")
 	{
 		m_filePathToEncrypt = QFileName.toStdString();
@@ -126,14 +122,19 @@ void MainWindow::on_pushButton_clicked() // кнопка шифровки
 	if(this->m_aesEncryptor->getIsKeyToEncryptReady() && this->m_isTextToEncryptReady)
 	{
 
-		memset(m_TmpByteArray, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH + CryptoPP::AES::BLOCKSIZE); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
-		readyIndex = 0;
-		ptrReadyIndex = &readyIndex;
+		try {
+			memset(m_TmpByteArray, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH + CryptoPP::AES::BLOCKSIZE); // заполняет key значением 0x00, длина key CryptoPP::AES::DEFAULT_KEYLENGTH
+			readyIndex = 0;
+			ptrReadyIndex = &readyIndex;
 
-		m_Dialog = new CreateNewKeys(m_TmpByteArray, ptrReadyIndex, this);
-		connect(m_Dialog, &CreateNewKeys::accepted, this, &MainWindow::setNewIV_PublicKey);
-		m_Dialog->setModal(true);
-		m_Dialog->show();
+			m_Dialog = new CreateNewKeys(m_TmpByteArray, ptrReadyIndex, this);
+			connect(m_Dialog, &CreateNewKeys::accepted, this, &MainWindow::setNewIV_PublicKey);
+			m_Dialog->setModal(true);
+			m_Dialog->show();
+		}  catch (...) {
+
+		}
+
 
 		// this->m_aesEncryptor->aesEncryptFile(this->m_filePathToEncrypt);
 	}
@@ -150,8 +151,13 @@ void MainWindow::on_pushButton_2_clicked() // кнопка дешифровки
 {
 	if(this->m_aesDecryptor->getIsKeyToDecryptReady() && this->m_isTextToDecryptReady)
 	{
-		this->m_aesDecryptor->setRsaDecryptor(this->m_rsaDecryptor);
-		this->m_aesDecryptor->aesDecryptFile(this->m_filePathToDecrypt);
+		try {
+			this->m_aesDecryptor->setRsaDecryptor(this->m_rsaDecryptor);
+			this->m_aesDecryptor->aesDecryptFile(this->m_filePathToDecrypt);
+		}  catch (...) {
+
+		}
+
 	}
 	else
 	{
@@ -166,8 +172,9 @@ void MainWindow::on_openPublicRsaKeyFilePushButton_clicked() //кнопка от
 {
 
 	QString QFileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-													"/home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug",
+													"",
 													tr("TextFile (*.key)"));
+	///home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug
 	if(QFileName.toStdString() != "")
 	{
 		std::string pathToPublicKey = QFileName.toStdString();
@@ -189,8 +196,9 @@ void MainWindow::on_openPublicRsaKeyFilePushButton_clicked() //кнопка от
 void MainWindow::on_openFileToDecryptPushButoon_clicked() // клик по кнопке открыть файл для дешифровки
 {
 	QString QFileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-													"/home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug",
+													"",
 													tr("TextFile (*.dat)"));
+	///home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug
 	if(QFileName.toStdString() != "")
 	{
 		this->m_filePathToDecrypt = QFileName.toStdString();
@@ -207,8 +215,9 @@ void MainWindow::on_openPrivateRsaKeyFilePushButoon_clicked() // открыть 
 {
 
 	QString QFileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-													"/home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug",
+													"",
 													tr("TextFile (*.key)"));
+	///home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug
 	if(QFileName.toStdString() != "")
 	{
 		std::string pathToPrivateKey = QFileName.toStdString();
