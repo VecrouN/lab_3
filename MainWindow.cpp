@@ -74,12 +74,11 @@ void MainWindow::setNewIV_PublicKey()
 
 void MainWindow::on_createNewRsaKeysPushButton_clicked()
 {
-	QString QDirectoryPath = QFileDialog::getExistingDirectory(this, tr("Open Directory"),"",
-
+	QString QDirectoryPath = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+													"/home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug",
 													QFileDialog::ShowDirsOnly
 													| QFileDialog::DontResolveSymlinks);
-	//"/home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug",
-
+	//"/
 	if(QDirectoryPath.toStdString() != "")
 	{
 		try {
@@ -103,9 +102,8 @@ void MainWindow::on_createNewRsaKeysPushButton_clicked()
 void MainWindow::on_openFileToEncryptPushButton_clicked() // клик по кнопке открыть файл для шифровки
 {
 	QString QFileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-													"",
+													"/home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug",
 													tr("TextFile (*.txt)"));
-	//home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug
 	if(QFileName.toStdString() != "")
 	{
 		m_filePathToEncrypt = QFileName.toStdString();
@@ -173,9 +171,8 @@ void MainWindow::on_openPublicRsaKeyFilePushButton_clicked() //кнопка от
 {
 
 	QString QFileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-													"",
+													"/home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug",
 													tr("TextFile (*.key)"));
-	///home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug
 	if(QFileName.toStdString() != "")
 	{
 		std::string pathToPublicKey = QFileName.toStdString();
@@ -197,9 +194,8 @@ void MainWindow::on_openPublicRsaKeyFilePushButton_clicked() //кнопка от
 void MainWindow::on_openFileToDecryptPushButoon_clicked() // клик по кнопке открыть файл для дешифровки
 {
 	QString QFileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-													"",
+													"/home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug",
 													tr("TextFile (*.dat)"));
-	///home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug
 	if(QFileName.toStdString() != "")
 	{
 		this->m_filePathToDecrypt = QFileName.toStdString();
@@ -216,9 +212,8 @@ void MainWindow::on_openPrivateRsaKeyFilePushButoon_clicked() // открыть 
 {
 
 	QString QFileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-													"",
+													"/home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug",
 													tr("TextFile (*.key)"));
-	///home/victor/Documents/miem/oop/build-lab_3-Desktop_Qt_5_15_1_GCC_64bit-Debug
 	if(QFileName.toStdString() != "")
 	{
 		std::string pathToPrivateKey = QFileName.toStdString();
