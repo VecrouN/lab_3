@@ -90,10 +90,11 @@ void MainWindow::on_createNewRsaKeysPushButton_clicked()
 			QMessageBox msgBox;
 			msgBox.setText("Ключи созданы");
 			msgBox.exec();
-		}
+
 		}  catch (...) {
 
 		}
+	}
 		// генерация рса ключей
 
 
